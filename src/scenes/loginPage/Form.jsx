@@ -27,7 +27,7 @@ import {CloudinaryImage} from '@cloudinary/url-gen';
 const CLOUDINARY_UPLOAD_PRESET = "dtu8pzhll";
 const CLOUDINARY_UPLOAD_URL = "https://api.cloudinary.com/v1_1/dtu8pzhll/image/upload";
 
-const registerSchema = yup.object.shape({
+const registerSchema = yup.object().shape({
     username:yup.string().required("required"),
     firstName:yup.string().required("required"),
     lastName:yup.string().required("required"),
@@ -41,7 +41,7 @@ const registerSchema = yup.object.shape({
 
 });
 
-const loginSchema = yup.object.shape({
+const loginSchema = yup.object().shape({
     email:yup.string().email("invalid email").required("required"),
     password:yup.string().required("required"),
 })
@@ -161,6 +161,9 @@ const Form = () => {
                 resetForm,
             })=> (
                 <form onSubmit={handleSubmit}>
+                    <Typography fontWeight="500" variant="h3" sx={{mb: "1.5rem"}}>
+                        {isLogin ? "Sign in to your account" : "Sign up for an account"}
+                    </Typography>
                     <Box
                         display="grid"
                         gap="30px"
