@@ -132,7 +132,7 @@ const Form = () => {
 
         const loggedIn = await loggedInRsponse.data;
         onSubmitProps.resetForm();
-        if(loggedIn){
+        if(loggedIn.token!==null){
             dispatch(
                 setLogin({
                     user: loggedIn.username,
