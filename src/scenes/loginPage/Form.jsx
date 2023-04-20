@@ -6,8 +6,10 @@ import{
     TextField,
     useMediaQuery,
     Typography,
-    useTheme
+    useTheme,
 } from "@mui/material"
+
+import { DatePicker } from "@mui/lab";
 
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined"
 import { Formik } from "formik";
@@ -18,13 +20,15 @@ import { setLogin } from "state";
 import Dropzone from "react-dropzone";
 import FlexBetween from "components/FlexBetween";
 import { Password } from "@mui/icons-material";
+//import { DatePicker } from '@mui/x-date-pickers';
+
 
 // Import the Cloudinary classes. 
 import {fill} from "@cloudinary/url-gen/actions/resize";
 import {CloudinaryImage} from '@cloudinary/url-gen';
 
 //https://localhost:7172
-const CLOUDINARY_UPLOAD_PRESET = "dtu8pzhll";
+const CLOUDINARY_UPLOAD_PRESET = "z1rbueyh";
 const CLOUDINARY_UPLOAD_URL = "https://api.cloudinary.com/v1_1/dtu8pzhll/image/upload";
 
 const registerSchema = yup.object().shape({
@@ -78,12 +82,16 @@ const Form = () => {
         const formData = new FormData();
         formData.append("file", file);
         formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
-        try {
-          const response = await axios.post(CLOUDINARY_UPLOAD_URL, formData);
-          return response.data.secure_url;
-        } catch (err) {
-          console.error(err);
-        }
+        
+        const res = await fetch(`${CLOUDINARY_UPLOAD_URL}`,
+        {
+            method:'Post',
+            body:formData
+        })
+
+        const img= await res.json()
+        console.log(img);
+        return img.secure_url;
       };
 
     const register = async(values, onSubmitProps) =>{
@@ -92,7 +100,15 @@ const Form = () => {
             const imgUrl = await uploadToCloudinary(values.profilePicture);
             console.log("profile picture URL: " + imgUrl);
             values.profilePicture = imgUrl;
-          }
+        }
+
+        if (values.coverPicture) {
+            const imgUrl = await uploadToCloudinary(values.coverPicture);
+            console.log("profile picture URL: " + imgUrl);
+            values.coverPicture = imgUrl;
+        }
+
+
 
         const formData = new FormData();
         for(let value in values){
@@ -100,15 +116,10 @@ const Form = () => {
         }
 
         //API call using formData
-        const savedUserRsponse = await fetch(
-            "https://localhost:7172/auth/register",
-            {
-                method: "POST",
-                body: formData,
-            }
-        );
+        console.log(values)
+        const savedUserRsponse = await axios.post('https://localhost:7172/api/auth/register', values);
 
-        const savedUser= await savedUserRsponse.json();
+        const savedUser= await savedUserRsponse.data;
         onSubmitProps.resetForm();
 
         if(savedUser){
@@ -117,16 +128,9 @@ const Form = () => {
     }
 
     const login = async(values, onSubmitProps) =>{
-        const loggedInRsponse = await fetch(
-            "https://localhost:7172/auth/login",
-            {
-                method: "POST",
-                headers:{"Content-Type": "application/json"},
-                body: JSON.stringify(values),
-            }
-        );
+        const loggedInRsponse = await axios.post('https://localhost:7172/api/auth/login', values);
 
-        const loggedIn = await loggedInRsponse.json();
+        const loggedIn = await loggedInRsponse.data;
         onSubmitProps.resetForm();
         if(loggedIn){
             dispatch(
@@ -260,6 +264,40 @@ const Form = () => {
                                             ):(
                                                 <FlexBetween>
                                                     <Typography>{values.profilePicture.name}</Typography>
+                                                    <EditOutlinedIcon />
+                                                </FlexBetween>
+                                            )}
+                                        </Box>
+                                    )}
+                                </Dropzone>
+                              </Box>
+
+                              <Box
+                                 gridColumn="span 4"
+                                 border={`1px solid ${palette.neutral.medium}`}
+                                 borderRadius="5px"
+                                 p="1rem"
+                              >
+                                <Dropzone
+                                   acceptedFiles=".jpg,.jpeg,.png"
+                                   multiple={false}
+                                   onDrop={(acceptedFiles) => 
+                                    setFieldValue("coverPicture" , acceptedFiles[0])
+                                   }
+                                >
+                                    {({getRootProps, getInputProps}) => (
+                                        <Box
+                                          {...getRootProps()}
+                                          border={`2px dashed ${palette.primary.main}`}
+                                          p="1rem"
+                                          sx={{"&:hover":{ cursor:"pointer"}}}
+                                        >
+                                            <input {...getInputProps()} />
+                                            {!values.coverPicture?(
+                                                <p>Add cover pic here</p>
+                                            ):(
+                                                <FlexBetween>
+                                                    <Typography>{values.coverPicture.name}</Typography>
                                                     <EditOutlinedIcon />
                                                 </FlexBetween>
                                             )}
