@@ -1,8 +1,10 @@
 import{
     ManageAccountsOutlined,
     EditOutlined,
-    LocationOutlined,
-    WorkOutOutlined,
+    LocationOnOutlined,
+    WorkOutlineOutlined,
+    FingerprintRounded,
+    CakeOutlined,
 }from "@mui/icons-material";
 import {Box, Typography, Divider, useTheme} from "@mui/material";
 import UserImage from "components/UserImage";
@@ -23,7 +25,7 @@ const UserWidget = ({userId, picturePath}) => {
     const main = palette.neutral.main;
 
     const getUser = async () => {
-        const response = await fetch(`https://localhost:7172/api/users/${userId}`,{
+        const response = await fetch(`https://localhost:7172/api/users/${userId}/widgets`,{
             method:"GET",
             headers:{ Authorization: `Bearer ${token}`}
         })
@@ -39,15 +41,13 @@ const UserWidget = ({userId, picturePath}) => {
     if(!user){
         return null;
     }
-    
-    const{
-      username,
-      country,
-      birthDate,
-      bio,
-      followed,
-      followers
-    } = user
+    console.log(picturePath)
+    const username = user.Name;
+    const country = user.Country;
+    const birthDate=user.DateOfBirth;
+    const bio= user.Bio;
+    const followed= user.Followed;
+    const followers= user.Followers;
 
     return(
         <WidgetWrapper>
@@ -55,7 +55,6 @@ const UserWidget = ({userId, picturePath}) => {
             <FlexBetween
               gap="0.5rem"
               pb="1.1rem"
-              onClick={() => navigate(`/profile/${userId}`)}
             >
                 <FlexBetween gap="1rem">
                     <UserImage image={picturePath} />
@@ -70,19 +69,43 @@ const UserWidget = ({userId, picturePath}) => {
                                 cursor: "pointer"
                             }
                           }}
+                          onClick={() => navigate(`/profile/${userId}`)}
                         >
                             {username}
                         </Typography>
-                        <Typography color={medium}>Followers: {followers.length}</Typography>
+                        <Box display="flex" alignItems="center" gap="1rem" mb="0.5rem">
+                            <Typography color={medium}>{followers} Followers</Typography>
+                            <Typography color={medium}>{followed} Following</Typography>
+                        </Box>
                     </Box>
-                    <ManageAccountsOutlined />
                 </FlexBetween>
+                <ManageAccountsOutlined />
+            </FlexBetween>
 
                 <Divider />
 
                 {/* SECOND ROW */}
+                <Box p="1rem 0">
+                    <Box display="flex" alignItems="center" gap="1rem" mb="0.5rem">
+                        <LocationOnOutlined fontSize="large" sx={{color:main}} />
+                        <Typography color={medium}>{country}</Typography>
+                    </Box>
+                    <Box display="flex" alignItems="center" gap="1rem">
+                        <CakeOutlined fontSize="large" sx={{color:main}} />
+                        <Typography color={medium} mt="0.5rem">{birthDate}</Typography>
+                    </Box>
+                </Box>
+                <Divider />
+                {/* THIRD ROW */}
+                <Box p="1rem 0">
+                    <Box display="flex"  gap="1rem">      
+                        <FingerprintRounded fontSize="large" sx={{color:main}}/>
+                        <Typography>{bio}</Typography>
+                    </Box>   
+                </Box>
                 
-            </FlexBetween>
         </WidgetWrapper>
     )
 };
+
+export default UserWidget;

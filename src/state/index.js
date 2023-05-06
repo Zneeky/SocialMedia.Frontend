@@ -4,7 +4,6 @@ const initialState = {
   mode: "light",
   user: null,
   token: null,
-  profilePic:null,
   posts: [],
 };
 
@@ -14,9 +13,6 @@ export const authSlice = createSlice({
   reducers: {
     setMode: (state) => {
       state.mode = state.mode === "light" ? "dark" : "light";
-    },
-    setProfilePic:(state, action) =>{
-      state.profilePic=action.payload.profilePic;
     },
     setLogin: (state, action) => {
       state.user = action.payload.user;

@@ -135,11 +135,12 @@ const Form = () => {
         if(loggedIn.token!==null){
             dispatch(
                 setLogin({
-                    user: loggedIn.username,
-                    token: loggedIn.token
+                    user: loggedIn,
+                    token: loggedIn.Token
                 })
             );
             navigate("/home")
+            console.log(loggedIn)
         }
     };
 

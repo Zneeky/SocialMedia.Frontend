@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
 
-const UserImage = ({imageUrl, size="60px"}) =>{
+const UserImage = ({image, size="60px"}) =>{
     return(
         <Box width={size} height={size}>
             <img 
@@ -8,7 +8,8 @@ const UserImage = ({imageUrl, size="60px"}) =>{
               width={size}
               height={size}
               alt="user"
-              src={`${imageUrl}`}
+              src={`${image}`}
+              crossOrigin="anonymous"
             />
         </Box>
     )
