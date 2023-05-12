@@ -25,13 +25,15 @@ import Dropzone from "react-dropzone";
 import { useDispatch, useSelector } from "react-redux";
 import { setPosts } from "state";
 import FlexBetween from "components/FlexBetween";
+import { CircularProgress } from "@mui/material";
+import axios from "axios";
 
 //https://localhost:7172
 const CLOUDINARY_UPLOAD_PRESET = "z1rbueyh";
 const CLOUDINARY_UPLOAD_URL =
   "https://api.cloudinary.com/v1_1/dtu8pzhll/image/upload";
 
-const MyPostWidget = ({ picturePath }) => {
+const MyPostWidget = ({ _id,picturePath }) => {
   const uploadToCloudinary = async (file) => {
     const formData = new FormData();
     formData.append("file", file);
@@ -52,28 +54,51 @@ const MyPostWidget = ({ picturePath }) => {
   const [image, setImage] = useState(null);
   const [post, setPost] = useState("");
   const { palette } = useTheme();
-  const { user } = useSelector((state) => state.user);
+  const user = useSelector((state) => state.user);
   const token = useSelector((state) => state.token);
   const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
   const mediumMain = palette.neutral.mediumMain;
   const medium = palette.neutral.medium;
 
   const handlePost = async () => {
-    const formData = new FormData();
-    formData.append("UserId", user.Id);
-    formData.append("Text", post);
-    if (image) {
-      const imageUrl = uploadToCloudinary(image);
-      formData.append("MediaUrl", imageUrl);
-    }
+    console.log(user);
+    console.log(token);
+    const postData = {
+      UserId: user.UserId,
+      Text: post,
+      MediaUrl: image ? await uploadToCloudinary(image) : "",
+    };
 
-    const response = await fetch(`http://localhost:7172/posts`, {
-      method: "POST",
-      headers: { Authorization: `Bearer ${token}` },
-      body: formData,
+    const postSave = await axios.post("https://localhost:7172/api/posts", postData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     });
 
-    const posts = await response.json();
+    if (postSave.status===200) {
+      const responseData = await postSave.data;
+      // Handle the response data
+      console.log(responseData);
+    } else {
+      // Handle non-2xx response status
+      console.log("Request failed with status:", postSave.status);
+    }
+
+    const getPostsRequest={
+      UserId:user.UserId,
+      pageNumber:1,
+      pageSize:15,
+    }
+
+    console.log(token)
+    const response = await axios.get(`https://localhost:7172/api/posts?UserId=${getPostsRequest.UserId}&pageNumber=${getPostsRequest.pageNumber}&pageSize=${getPostsRequest.pageSize}`,{
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    const posts = await response.data;
+
     dispatch(setPosts({ posts }));
     setImage(null);
     setPost("");
@@ -85,8 +110,8 @@ const MyPostWidget = ({ picturePath }) => {
         <UserImage image={picturePath} />
         <InputBase
           placeholder={isNonMobileScreens
-            ? "Ride the wave, share your thoughts..."
-            : "Surf your ideas, create a ripple..."}
+            ? "Ride the wave, share your thoughts🌊..."
+            : "Surf your ideas, create a ripple🌊..."}
           onChange={(e) => setPost(e.target.value)}
           value={post}
           sx={{

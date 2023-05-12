@@ -20,6 +20,7 @@ import { setLogin } from "state";
 import Dropzone from "react-dropzone";
 import FlexBetween from "components/FlexBetween";
 import { Password } from "@mui/icons-material";
+import { Backdrop, CircularProgress } from "@mui/material";
 //import { DatePicker } from '@mui/x-date-pickers';
 
 
@@ -69,6 +70,7 @@ const initialValuesLogin = {
 }
 
 const Form = () => {
+    const [isLoading, setIsLoading] = useState(false);
     const [pageType, setPageType] = useState("login");
     const {palette} = useTheme();
     const dispatch = useDispatch();
@@ -121,10 +123,10 @@ const Form = () => {
 
         const savedUser= await savedUserRsponse.data;
         onSubmitProps.resetForm();
-
         if(savedUser){
             setPageType("login");
         }
+
     }
 
     const login = async(values, onSubmitProps) =>{
@@ -145,8 +147,10 @@ const Form = () => {
     };
 
     const handleFormSubmit = async(values, onSubmitProps) =>{
+        setIsLoading(true);
         if(isLogin) await login(values, onSubmitProps);
         if(isRegister) await register(values, onSubmitProps);
+        setIsLoading(false);
     };
 
     return(
@@ -166,6 +170,9 @@ const Form = () => {
                 resetForm,
             })=> (
                 <form onSubmit={handleSubmit}>
+                    <Backdrop open={isLoading} sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
+                        <CircularProgress color="inherit" />
+                    </Backdrop>
                     <Typography fontWeight="500" variant="h3" sx={{mb: "1.5rem"}}>
                         {isLogin ? "Sign in to your account" : "Sign up for an account"}
                     </Typography>

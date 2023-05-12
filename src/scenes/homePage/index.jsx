@@ -10,7 +10,7 @@ const HomePage = () => {
     const user = useSelector((state) => state.user);
     const _id = user?.UserId;
     const picturePath = user?.ProfilePicture;
-
+    console.log(user)
     return(
     <Box>
         <Navbar/>
@@ -28,7 +28,7 @@ const HomePage = () => {
                 flexBasis={isNonMobileScreens ? "42%" : undefined}
                 mt={isNonMobileScreens ? undefined : "2rem"}
             >
-                <MyPostWidget picturePath={picturePath}/>
+                <MyPostWidget userId={_id} picturePath={picturePath}/>
             </Box>
             {isNonMobileScreens && (
                 <Box flexBasis="26%">
