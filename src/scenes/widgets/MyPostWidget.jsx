@@ -33,7 +33,7 @@ const CLOUDINARY_UPLOAD_PRESET = "z1rbueyh";
 const CLOUDINARY_UPLOAD_URL =
   "https://api.cloudinary.com/v1_1/dtu8pzhll/image/upload";
 
-const MyPostWidget = ({ _id,picturePath }) => {
+const MyPostWidget = ({ _id, picturePath }) => {
   const uploadToCloudinary = async (file) => {
     const formData = new FormData();
     formData.append("file", file);
@@ -69,13 +69,17 @@ const MyPostWidget = ({ _id,picturePath }) => {
       MediaUrl: image ? await uploadToCloudinary(image) : "",
     };
 
-    const postSave = await axios.post("https://localhost:7172/api/posts", postData, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const postSave = await axios.post(
+      "https://localhost:7172/api/posts",
+      postData,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
 
-    if (postSave.status===200) {
+    if (postSave.status === 200) {
       const responseData = await postSave.data;
       // Handle the response data
       console.log(responseData);
@@ -84,18 +88,21 @@ const MyPostWidget = ({ _id,picturePath }) => {
       console.log("Request failed with status:", postSave.status);
     }
 
-    const getPostsRequest={
-      UserId:user.UserId,
-      pageNumber:1,
-      pageSize:15,
-    }
+    const getPostsRequest = {
+      UserId: user.UserId,
+      pageNumber: 1,
+      pageSize: 15,
+    };
 
-    console.log(token)
-    const response = await axios.get(`https://localhost:7172/api/posts?UserId=${getPostsRequest.UserId}&pageNumber=${getPostsRequest.pageNumber}&pageSize=${getPostsRequest.pageSize}`,{
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    console.log(token);
+    const response = await axios.get(
+      `https://localhost:7172/api/posts?UserId=${getPostsRequest.UserId}&pageNumber=${getPostsRequest.pageNumber}&pageSize=${getPostsRequest.pageSize}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
 
     const posts = await response.data;
 
@@ -109,9 +116,11 @@ const MyPostWidget = ({ _id,picturePath }) => {
       <FlexBetween gap="1.5rem">
         <UserImage image={picturePath} />
         <InputBase
-          placeholder={isNonMobileScreens
-            ? "Ride the wave, share your thoughts🌊..."
-            : "Surf your ideas, create a ripple🌊..."}
+          placeholder={
+            isNonMobileScreens
+              ? "Ride the wave, share your thoughts🌊..."
+              : "Surf your ideas, create a ripple🌊..."
+          }
           onChange={(e) => setPost(e.target.value)}
           value={post}
           sx={{
@@ -153,9 +162,7 @@ const MyPostWidget = ({ _id,picturePath }) => {
                     </FlexBetween>
                   )}
                 </Box>
-                {image && (
-                    <DeleteOutlined onClick={() => setImage(null)}/>
-                )}
+                {image && <DeleteOutlined onClick={() => setImage(null)} />}
               </FlexBetween>
             )}
           </Dropzone>
@@ -197,16 +204,16 @@ const MyPostWidget = ({ _id,picturePath }) => {
           </FlexBetween>
         )}
 
-        <Button 
-            disabled={!post}
-            onClick={handlePost}
-            sx={{
-                color:palette.background.alt,
-                backgroundColor: palette.primary.main,
-                borderRadius: "3rem"
-            }}
+        <Button
+          disabled={!post}
+          onClick={handlePost}
+          sx={{
+            color: palette.background.alt,
+            backgroundColor: palette.primary.main,
+            borderRadius: "3rem",
+          }}
         >
-            POST
+          POST
         </Button>
       </FlexBetween>
     </WidgetWrapper>
