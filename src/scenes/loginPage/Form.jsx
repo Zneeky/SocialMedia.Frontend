@@ -138,6 +138,7 @@ const Form = () => {
             dispatch(
                 setLogin({
                     user: loggedIn,
+                    profile: loggedIn,
                     token: loggedIn.Token
                 })
             );

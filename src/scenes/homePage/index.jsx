@@ -9,7 +9,7 @@ const HomePage = () => {
 
     const isNonMobileScreens = useMediaQuery("(min-width:1000px)");
     const user = useSelector((state) => state.user);
-    const _id = user?.UserId;
+    const userId = user?.UserId;
     const picturePath = user?.ProfilePicture;
     console.log(user)
     return(
@@ -23,14 +23,14 @@ const HomePage = () => {
             justifyContent="space-between"    
         >
             <Box flexBasis={isNonMobileScreens ? "26%" : undefined}>
-                <UserWidget userId={_id} picturePath={picturePath}/>
+                <UserWidget userId={userId} picturePath={picturePath}/>
             </Box>
             <Box 
                 flexBasis={isNonMobileScreens ? "42%" : undefined}
                 mt={isNonMobileScreens ? undefined : "2rem"}
             >
-                <MyPostWidget userId={_id} picturePath={picturePath}/>
-                <PostsWidget userId={_id}/>
+                <MyPostWidget userId={userId} picturePath={picturePath}/>
+                <PostsWidget userId={userId}/>
             </Box>
             {isNonMobileScreens && (
                 <Box flexBasis="26%">

@@ -41,7 +41,7 @@ const UserWidget = ({userId, picturePath}) => {
     if(!user){
         return null;
     }
-    console.log(picturePath)
+    //console.log(picturePath)
     const username = user.Name;
     const country = user.Country;
     const birthDate=user.DateOfBirth;
