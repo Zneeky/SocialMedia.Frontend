@@ -1,17 +1,26 @@
 import { Box, useMediaQuery } from "@mui/material";
-import { useSelector } from "react-redux";
+import { useSelector,useDispatch } from "react-redux";
 import Navbar from "scenes/navbar";
 import UserWidget from "scenes/widgets/UserWidget";
 import MyPostWidget from "scenes/widgets/MyPostWidget"
 import PostsWidget from "scenes/widgets/PostsWidget";
+import { setProfile } from "state";
 
 const HomePage = () => {
 
+    const dispatch= useDispatch();
     const isNonMobileScreens = useMediaQuery("(min-width:1000px)");
     const user = useSelector((state) => state.user);
+    const profile = useSelector((state) => state.user);
     const userId = user?.UserId;
     const picturePath = user?.ProfilePicture;
-    console.log(user)
+    dispatch(
+        setProfile({
+          profile: profile,
+        })
+      );
+    const profil= useSelector((state) =>state.profile)
+    console.log(profil)
     return(
     <Box>
         <Navbar/>
@@ -23,7 +32,7 @@ const HomePage = () => {
             justifyContent="space-between"    
         >
             <Box flexBasis={isNonMobileScreens ? "26%" : undefined}>
-                <UserWidget userId={userId} picturePath={picturePath}/>
+                <UserWidget userId={userId} />
             </Box>
             <Box 
                 flexBasis={isNonMobileScreens ? "42%" : undefined}

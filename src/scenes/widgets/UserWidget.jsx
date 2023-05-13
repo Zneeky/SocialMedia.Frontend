@@ -15,23 +15,38 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 
-const UserWidget = ({userId, picturePath}) => {
+const UserWidget = ({userId}) => {
     const [user,setUser]= useState(null);
     const {palette} = useTheme();
     const navigate = useNavigate();
     const token = useSelector((state) => state.token)
+    const profile = useSelector((state) => state.profile)
     const dark = palette.neutral.dark;
     const medium = palette.neutral.medium;
     const main = palette.neutral.main;
 
-    const getUser = async () => {
-        const response = await fetch(`https://localhost:7172/api/users/${userId}/widgets`,{
-            method:"GET",
-            headers:{ Authorization: `Bearer ${token}`}
-        })
+    console.log(profile);
 
-        const data = await response.json();
-        setUser(data);
+    const getUser = async () => {
+        console.log(profile.UserId)
+        console.log(userId)
+        if(profile.UserId===userId){
+            const response = await fetch(`https://localhost:7172/api/users/${userId}/widgets`,{
+                method:"GET",
+                headers:{ Authorization: `Bearer ${token}`}
+            })
+    
+            const data = await response.json();
+            setUser(data);
+        }else{
+            const response = await fetch(`https://localhost:7172/api/users/${profile.UserId}/widgets`,{
+                method:"GET",
+                headers:{ Authorization: `Bearer ${token}`}
+            })
+    
+            const data = await response.json();
+            setUser(data);
+        }
     };
 
     useEffect(() =>{
@@ -57,7 +72,7 @@ const UserWidget = ({userId, picturePath}) => {
               pb="1.1rem"
             >
                 <FlexBetween gap="1rem">
-                    <UserImage image={picturePath} />
+                    <UserImage image={user.ProfilePicture} />
                     <Box>
                         <Typography
                           variant="h4"
