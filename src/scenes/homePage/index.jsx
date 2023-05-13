@@ -5,6 +5,7 @@ import UserWidget from "scenes/widgets/UserWidget";
 import MyPostWidget from "scenes/widgets/MyPostWidget"
 import PostsWidget from "scenes/widgets/PostsWidget";
 import { setProfile } from "state";
+import { useEffect } from "react";
 
 const HomePage = () => {
 
@@ -14,11 +15,15 @@ const HomePage = () => {
     const profile = useSelector((state) => state.user);
     const userId = user?.UserId;
     const picturePath = user?.ProfilePicture;
-    dispatch(
-        setProfile({
-          profile: profile,
-        })
-      );
+
+    useEffect(() => {
+        dispatch(
+            setProfile({
+              profile: profile,
+            })
+          );
+      }, []);
+ 
     const profil= useSelector((state) =>state.profile)
     console.log(profil)
     return(

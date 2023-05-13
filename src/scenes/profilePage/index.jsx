@@ -33,28 +33,30 @@ const ProfilePage = () => {
 
   return (
     <Box>
-      <Navbar />
-      <Box
-        width="100%"
+    <Navbar/>
+    <Box
+        widht="100%"
         padding="2rem 6%"
         display={isNonMobileScreens ? "flex" : "block"}
-        gap="2rem"
-        justifyContent="center"
-      >
+        gap="0.5rem"
+        justifyContent="space-between"    
+    >
         <Box flexBasis={isNonMobileScreens ? "26%" : undefined}>
-          <UserWidget userId={userId} picturePath={user.ProfilePicture} />
-          <Box m="2rem 0" />
+            <UserWidget userId={userId} />
         </Box>
-        <Box
-          flexBasis={isNonMobileScreens ? "42%" : undefined}
-          mt={isNonMobileScreens ? undefined : "2rem"}
+        <Box 
+            flexBasis={isNonMobileScreens ? "42%" : undefined}
+            mt={isNonMobileScreens ? undefined : "2rem"}
         >
-          
-          <Box m="2rem 0" />
-          <PostsWidget userId={userId} isProfile />
+            <PostsWidget userId={userId}/>
         </Box>
-      </Box>
+        {isNonMobileScreens && (
+            <Box flexBasis="26%">
+                
+            </Box>
+        )}
     </Box>
+</Box>
   );
 };
 
