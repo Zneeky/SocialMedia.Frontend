@@ -1,4 +1,4 @@
-import { Box, Typography, useTheme } from "@mui/material";
+import { Box, Typography, useTheme, Divider } from "@mui/material";
 import FlexBetween from "components/FlexBetween";
 import UserImage from "components/UserImage";
 import { useDispatch, useSelector } from "react-redux";
@@ -9,6 +9,7 @@ const SearchedProfile = ({SearchedUserId, Name, ProfilePicture}) =>{
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const user = useSelector((state) => state.user);
+    const profile = useSelector((state) => state.profile)
     const userId = user.UserId;
     const token = useSelector((state) => state.token);
   
@@ -40,12 +41,23 @@ const SearchedProfile = ({SearchedUserId, Name, ProfilePicture}) =>{
   
     return (
       <FlexBetween>
-        <FlexBetween gap="1rem">
+        <FlexBetween 
+            gap="1rem"
+            sx={{
+                width: "100%",
+                backgroundColor: palette.background.alt,
+                padding: "1rem 2rem 1rem 2rem",
+                zIndex:3,
+                "&:hover": {
+                    backgroundColor: palette.neutral.light,
+                  },
+              }}
+        >
           <UserImage image={ProfilePicture} size="55px" />
           <Box
             onClick={() => {
               getProfile();
-              navigate(`/profile/${SearchedUserId}`);
+              navigate(`/profile/${profile.UserId}`);
               navigate(0);
             }}
           >
@@ -55,7 +67,7 @@ const SearchedProfile = ({SearchedUserId, Name, ProfilePicture}) =>{
               fontWeight="500"
               sx={{
                 "&:hover": {
-                  color: palette.primary.light,
+                  color: palette.primary.main,
                   cursor: "pointer",
                 },
               }}

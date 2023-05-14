@@ -1,30 +1,33 @@
 import React from "react";
-import { Box } from "@mui/material";
-import Friend from "components/Frined";
+import { Box,useTheme } from "@mui/material";
 import SearchedProfile from "./SearchedProfile";
 
 const SearchResultsList = ({profileValues}) =>{
 
+    const { palette } = useTheme();
+    const primaryLight = palette.primary.light;
+    const primaryDark = palette.primary.dark;
+    const main = palette.neutral.main;
+    const medium = palette.neutral.medium;
+    console.log(profileValues);
     return(
-        <Box overflow="auto">
             <>
                 {profileValues.map(
                  ({
-                    UserId,
                     Name,
-                    UserProfilePicture
+                    UserProfilePicture,
+                    UserId,
                   }) => 
                   (
                     <SearchedProfile
                         key={UserId} 
-                        UserId={UserId}
+                        SearchedUserId={UserId}
                         Name={Name}
                         ProfilePicture={UserProfilePicture}
                     />
                   )
                 )}
             </>
-        </Box>
     )
 }
 
