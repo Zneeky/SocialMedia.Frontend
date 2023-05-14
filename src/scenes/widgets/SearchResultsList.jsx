@@ -15,15 +15,15 @@ const SearchResultsList = ({profileValues}) =>{
                 {profileValues.map(
                  ({
                     Name,
-                    UserProfilePicture,
+                    ProfilePicture,
                     UserId,
                   }) => 
                   (
                     <SearchedProfile
                         key={UserId} 
                         SearchedUserId={UserId}
+                        ProfilePicture={ProfilePicture}
                         Name={Name}
-                        ProfilePicture={UserProfilePicture}
                     />
                   )
                 )}

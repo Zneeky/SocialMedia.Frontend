@@ -5,7 +5,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { setProfile } from "state";
 
-const SearchedProfile = ({SearchedUserId, Name, ProfilePicture}) =>{
+const SearchedProfile = ({SearchedUserId,ProfilePicture,Name}) =>{
+    console.log(ProfilePicture)
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const user = useSelector((state) => state.user);
@@ -57,7 +58,7 @@ const SearchedProfile = ({SearchedUserId, Name, ProfilePicture}) =>{
           <Box
             onClick={() => {
               getProfile();
-              navigate(`/profile/${profile.UserId}`);
+              navigate(`/profile/${SearchedUserId}`);
               navigate(0);
             }}
           >
