@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState} from "react";
 import {
   Box,
   IconButton,
@@ -24,12 +24,18 @@ import { useDispatch, useSelector } from "react-redux";
 import { setMode, setLogout } from "state";
 import { useNavigate } from "react-router-dom";
 import FlexBetween from "components/FlexBetween";
+import axios from "axios";
+import SearchResultsList from "scenes/widgets/SearchResultsList";
+import './styles.css';
 
 const Navbar = () => {
   const [isMobileMenuToggled, setIsMobileMenuToggled] = useState(false);
+  const [jsonResult, setJsonResults] = useState([]);
+  const [seachText, setSearchText] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const user = useSelector((state) => state.user);
+  const token = useSelector((state) => state.token);
   const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
 
   const theme = useTheme();
@@ -40,8 +46,22 @@ const Navbar = () => {
   const alt = theme.palette.background.alt;
 
   const fullName = `${user.Name}`;
+  let submit = async (searchText) =>{
+    const response = await axios.get(`https://localhost:7172/api/users/results?name=${searchText}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    const data = await response.data;
+    setJsonResults(data);
+  }
 
   return (
+    <div>
+          {jsonResult.length>0 &&(
+            <SearchResultsList className="SearchResultsList" profileValues={jsonResult} />
+          )}
     <FlexBetween padding="1rem 6%" backgroundColor={alt}>
       <FlexBetween gap="1.75rem">
         <Typography
@@ -58,19 +78,18 @@ const Navbar = () => {
         >
           waVe
         </Typography>
-        {isNonMobileScreens && (
           <FlexBetween
             backgroundColor={neutralLight}
             borderRadius="9px"
             gap="3rem"
             padding="0.1rem 1.5rem"
+            overflow="auto"
           >
-            <InputBase placeholder="Search..." />
-            <IconButton>
+            <InputBase placeholder="Search..." onChange={e => setSearchText(e.target.value)}/>
+            <IconButton onClick={() => submit(seachText)}>
               <Search />
             </IconButton>
           </FlexBetween>
-        )}
       </FlexBetween>
 
       {/* DESKTOP NAV */}
@@ -191,6 +210,7 @@ const Navbar = () => {
         </Box>
       )}
     </FlexBetween>
+    </div>
   );
 };
 

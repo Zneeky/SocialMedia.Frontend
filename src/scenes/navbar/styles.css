@@ -1,0 +1,10 @@
+.SearchResultsList {
+    position: absolute;
+    top: 100%;
+    left: 150px;
+    border-top: none;
+    width: 100%;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 100;
+  }
