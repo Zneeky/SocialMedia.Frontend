@@ -120,6 +120,7 @@ const Navbar = () => {
             },
             top: `${y}px`,
             left: `${x}px`,
+            zIndex:4,
           }}
           ref={dropdownRef}
         >

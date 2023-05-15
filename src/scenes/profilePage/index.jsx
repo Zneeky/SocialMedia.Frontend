@@ -37,21 +37,23 @@ const ProfilePage = () => {
     <Box
         widht="100%"
         padding="2rem 6%"
-        display={isNonMobileScreens ? "flex" : "block"}
+        display={isNonMobileScreens ? 'flex' : 'block'}
+        flexDirection={isNonMobileScreens ? 'column' : 'column'}
         gap="0.5rem"
-        justifyContent="space-between"    
+        justifyContent="center"
+        alignItems="center"   
     >
-        <Box flexBasis={isNonMobileScreens ? "26%" : undefined}>
-            <UserWidget userId={userId} />
+        <Box width={isNonMobileScreens ? "70%" : undefined}>
+            <UserWidget userId={userId} isNotProfile={false}/>
         </Box>
         <Box 
-            flexBasis={isNonMobileScreens ? "42%" : undefined}
+            width={isNonMobileScreens ? "60%" : undefined}
             mt={isNonMobileScreens ? undefined : "2rem"}
         >
             <PostsWidget userId={userId} isProfile={true}/>
         </Box>
         {isNonMobileScreens && (
-            <Box flexBasis="26%">
+            <Box width="15%">
                 
             </Box>
         )}

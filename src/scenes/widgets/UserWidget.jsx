@@ -6,7 +6,7 @@ import {
   FingerprintRounded,
   CakeOutlined,
 } from "@mui/icons-material";
-import { Box, Typography, Divider, useTheme, Button } from "@mui/material";
+import { Box, Typography, Divider, useTheme, Button,Card} from "@mui/material";
 import UserImage from "components/UserImage";
 import FlexBetween from "components/FlexBetween";
 import WidgetWrapper from "components/WidgetWrapper";
@@ -14,9 +14,57 @@ import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { styled } from '@mui/system';
 
-const UserWidget = ({ userId }) => {
+const Cover = styled('img')({
+  width: '100%',
+  height: 200,
+  objectFit: 'cover',
+});
+
+const AvatarWrapper = styled('div')({
+  position: 'absolute',
+  top: 140,
+  left: 8,
+  zIndex: 1,
+});
+
+const Avatar = styled('img')({
+  width: 80,
+  height: 80,
+  border: '2px solid white',
+  borderRadius: '50%',
+});
+
+const Content = styled('div')(({ theme }) => ({
+  padding: theme.spacing(2),
+}));
+
+const Header = styled('div')(({ theme }) => ({
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  marginBottom: theme.spacing(2),
+}));
+
+const Title = styled(Typography)({
+  fontSize: 24,
+  fontWeight: 'bold',
+});
+
+const Location = styled(Typography)({
+  color: 'text.secondary',
+});
+
+const EditButton = styled(Button)(({ theme }) => ({
+  marginLeft: theme.spacing(2),
+  color: theme.palette.primary.main,
+}));
+
+
+const UserWidget = ({ userId, isNotProfile = true}) => {
   const [user, setUser] = useState(null);
+  const [editMode, setEditMode] = useState(false);
   const [followText, setFollowText]=useState("");
   const [followers, setFollowers]= useState(0);
   const { palette } = useTheme();
@@ -28,6 +76,15 @@ const UserWidget = ({ userId }) => {
   const medium = palette.neutral.medium;
   const main = palette.neutral.main;
   const isEqual = userIn.UserId === userId;
+
+  const handleEditProfile = () => {
+    setEditMode(true);
+  };
+
+  const handleSaveProfile = () => {
+    // Save profile logic
+    setEditMode(false);
+  };
 
   const getUser = async () => {
     console.log(profile)
@@ -125,6 +182,7 @@ const UserWidget = ({ userId }) => {
   let followed = user.Followed;
 
 
+  if(isNotProfile){
   return (
     <WidgetWrapper>
       {/* FIRST ROW */}
@@ -193,6 +251,49 @@ const UserWidget = ({ userId }) => {
       </Box>
     </WidgetWrapper>
   );
+  }else{
+    return (
+      <Card sx={{ position: 'relative', overflow: 'hidden', borderRadius: 1 }}>
+      <Cover src={profile.ProfilePicture} alt="Cover" />
+      <AvatarWrapper>
+        <Avatar src={profile.ProfilePicture} />
+      </AvatarWrapper>
+      <Content>
+        <Header>
+          {!editMode ? (
+            <Title variant="h6">{profile.Name}</Title>
+          ) : (
+            <input
+              type="text"
+              className="border py-2 px-3 rounded-md"
+              placeholder="Your name"
+              value={username}
+              //onChange={(ev) => setName(ev.target.value)}
+            />
+          )}
+          {isEqual ? (
+            <EditButton onClick={editMode ? handleSaveProfile : handleEditProfile}>
+              {editMode ? 'Save Profile' : 'Edit Profile'}
+            </EditButton>
+          ) : (
+            <Button
+            onClick={() => handleButtonFollow()}
+            sx={{
+              color: palette.background.alt,
+              backgroundColor: palette.primary.main,
+              borderRadius: "8px",
+            }}
+          >
+            {followText}
+          </Button>
+        )}
+        </Header>
+        <Location variant="subtitle2">{profile.place || 'Internet'}</Location>
+        {/* Additional content */}
+      </Content>
+    </Card>
+    );
+  }
 };
 
 export default UserWidget;
