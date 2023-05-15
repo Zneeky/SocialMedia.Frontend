@@ -48,7 +48,7 @@ const ProfilePage = () => {
             flexBasis={isNonMobileScreens ? "42%" : undefined}
             mt={isNonMobileScreens ? undefined : "2rem"}
         >
-            <PostsWidget userId={userId}/>
+            <PostsWidget userId={userId} isProfile={true}/>
         </Box>
         {isNonMobileScreens && (
             <Box flexBasis="26%">

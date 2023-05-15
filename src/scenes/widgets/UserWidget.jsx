@@ -13,9 +13,12 @@ import WidgetWrapper from "components/WidgetWrapper";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const UserWidget = ({ userId }) => {
   const [user, setUser] = useState(null);
+  const [followText, setFollowText]=useState("");
+  const [followers, setFollowers]= useState(0);
   const { palette } = useTheme();
   const navigate = useNavigate();
   const token = useSelector((state) => state.token);
@@ -27,7 +30,21 @@ const UserWidget = ({ userId }) => {
   const isEqual = userIn.UserId === userId;
 
   const getUser = async () => {
+    console.log(profile)
+    let toData={};
     if (isEqual) {
+      const response = await fetch(
+        `https://localhost:7172/api/users/${userIn.UserId}/widgets`,
+        {
+          method: "GET",
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      const data = await response.json();
+      toData=data;
+      setUser(data);
+    } else {
       const response = await fetch(
         `https://localhost:7172/api/users/${userId}/widgets`,
         {
@@ -37,20 +54,61 @@ const UserWidget = ({ userId }) => {
       );
 
       const data = await response.json();
+      toData=data;
       setUser(data);
-    } else {
-      const response = await fetch(
-        `https://localhost:7172/api/users/${profile.UserId}/widgets`,
-        {
-          method: "GET",
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
 
-      const data = await response.json();
-      setUser(data);
+      //Check if following 
+      const checkFollow= await axios.get(`https://localhost:7172/api/users/followings?userId=${userIn.UserId}&profileId=${userId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+
+      const checkFollowResponse=await checkFollow.data;
+      if(checkFollowResponse===true){
+        setFollowText("UNFOLLOW")
+      }else{
+        setFollowText("FOLLOW")
+      }
+
+          // Assuming the API response includes an array of followers
+    }
+    if (toData && toData.Followers) {
+      const followersData = toData.Followers;
+      setFollowers(followersData);
+    } else {
+      setFollowers(0); // Set default value if Followers property is missing
     }
   };
+
+  const handleButtonFollow = async () =>{
+    if (followText === "FOLLOW") {
+      const follow = await axios.post(
+        `https://localhost:7172/api/users/followings?userId=${userIn.UserId}&followedId=${userId}`,
+        null, // Request body is null for a POST request
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setFollowers(followers+1);
+      setFollowText("UNFOLLOW");
+    } else {
+      const unfollow = await axios.delete(
+        `https://localhost:7172/api/users/followings?userId=${userIn.UserId}&followedId=${userId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setFollowers(followers-1);
+      setFollowText("FOLLOW");
+    }
+  }
 
   useEffect(() => {
     getUser();
@@ -64,8 +122,8 @@ const UserWidget = ({ userId }) => {
   const country = user.Country;
   const birthDate = user.DateOfBirth;
   const bio = user.Bio;
-  const followed = user.Followed;
-  const followers = user.Followers;
+  let followed = user.Followed;
+
 
   return (
     <WidgetWrapper>
@@ -98,13 +156,14 @@ const UserWidget = ({ userId }) => {
           <ManageAccountsOutlined />
         ) : (
             <Button
+            onClick={() => handleButtonFollow()}
             sx={{
               color: palette.background.alt,
               backgroundColor: palette.primary.main,
               borderRadius: "8px",
             }}
           >
-            follow
+            {followText}
           </Button>
         )}
       </FlexBetween>
