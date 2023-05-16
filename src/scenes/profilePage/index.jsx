@@ -28,7 +28,7 @@ const ProfilePage = () => {
   useEffect(() => {
     getUser();
 
-    const delay = 1000; // 2 second
+    const delay = 1000; // 1 second
 
     setTimeout(() => {
       setIsLoading(false);

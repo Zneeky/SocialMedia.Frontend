@@ -254,7 +254,7 @@ const UserWidget = ({ userId, isNotProfile = true}) => {
   }else{
     return (
       <Card sx={{ position: 'relative', overflow: 'hidden', borderRadius: 1 }}>
-      <Cover src={user.CoverPicture} alt="Cover" />
+      <Cover src={user.CoverPicture || `https://www.creativefabrica.com/wp-content/uploads/2018/11/Wave-logo-by-Mansel-Brist-2.jpg`} alt="Cover" />
       <AvatarWrapper>
         <Avatar src={user.ProfilePicture} sx={{border: `2px solid white`,}} />
       </AvatarWrapper>

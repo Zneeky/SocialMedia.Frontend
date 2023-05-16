@@ -54,7 +54,7 @@ const PostWidget = ({
     if (comments !== {}) {
       setCurrentComments(comments);
     }
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [comments]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleCommentSubmit = async (event) => {
     const body = {
@@ -136,7 +136,7 @@ const PostWidget = ({
             <IconButton onClick={() => setIsComments(!isComments)}>
               <ChatBubbleOutlineOutlined />
             </IconButton>
-            <Typography>{comments.length}</Typography>
+            <Typography>{commentsCurrent.length}</Typography>
           </FlexBetween>
         </FlexBetween>
 
