@@ -126,7 +126,7 @@ const MyPostWidget = ({ _id, picturePath }) => {
           sx={{
             width: "100%",
             backgroundColor: palette.neutral.light,
-            borderRadius: "2rem",
+            borderRadius: "8px",
             padding: "1rem 2rem",
           }}
         />

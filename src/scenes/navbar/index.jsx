@@ -49,11 +49,13 @@ const Navbar = () => {
   const [y, setY] = useState();
 
   const getPosition = () => {
+    if(boxRef.current){
     const x = boxRef.current.offsetLeft;
     setX(x);
 
     const y = boxRef.current.offsetTop;
     setY(y * 3);
+    }
   };
 
   // Get the position of the red box in the beginning
@@ -114,8 +116,11 @@ const Navbar = () => {
             },
             "&::-webkit-scrollbar-thumb": {
               backgroundColor: theme.palette.primary.main,
-              border: "3px solid transparent",
               borderRadius: "8px",
+                border: "none",
+                "&:hover": {
+                  backgroundColor: theme.palette.primary.dark,
+                },
               outline: "1px solid slategrey",
             },
             top: `${y}px`,

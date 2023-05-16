@@ -6,7 +6,7 @@ import {
   FingerprintRounded,
   CakeOutlined,
 } from "@mui/icons-material";
-import { Box, Typography, Divider, useTheme, Button,Card} from "@mui/material";
+import { Box, Typography, Divider, useTheme, Button,Card, InputBase,} from "@mui/material";
 import UserImage from "components/UserImage";
 import FlexBetween from "components/FlexBetween";
 import WidgetWrapper from "components/WidgetWrapper";
@@ -52,9 +52,9 @@ const Title = styled(Typography)({
   fontWeight: 'bold',
 });
 
-const Location = styled(Typography)({
-  color: 'text.secondary',
-});
+const Location = styled(Typography)(({theme})=> ({
+  color: theme.palette.primary.dark,
+}));
 
 const EditButton = styled(Button)(({ theme }) => ({
   marginLeft: theme.spacing(2),
@@ -254,16 +254,32 @@ const UserWidget = ({ userId, isNotProfile = true}) => {
   }else{
     return (
       <Card sx={{ position: 'relative', overflow: 'hidden', borderRadius: 1 }}>
-      <Cover src={profile.ProfilePicture} alt="Cover" />
+      <Cover src={user.CoverPicture} alt="Cover" />
       <AvatarWrapper>
-        <Avatar src={profile.ProfilePicture} />
+        <Avatar src={user.ProfilePicture} sx={{border: `2px solid white`,}} />
       </AvatarWrapper>
       <Content>
         <Header>
           {!editMode ? (
-            <Title variant="h6">{profile.Name}</Title>
+            <Box display="flex" gap="1rem">
+            <Title variant="h6">{user.Name}</Title>
+            {!isEqual &&(
+              <Button
+              onClick={() => handleButtonFollow()}
+              sx={{
+                color: palette.background.alt,
+                backgroundColor: palette.primary.main,
+                borderRadius: "8px",
+                height:"30%"
+              }}
+            >
+              {followText}
+            </Button>
+            )}
+            </Box>
+            
           ) : (
-            <input
+            <InputBase
               type="text"
               className="border py-2 px-3 rounded-md"
               placeholder="Your name"
@@ -271,24 +287,27 @@ const UserWidget = ({ userId, isNotProfile = true}) => {
               //onChange={(ev) => setName(ev.target.value)}
             />
           )}
-          {isEqual ? (
+          
+          {isEqual && (
             <EditButton onClick={editMode ? handleSaveProfile : handleEditProfile}>
               {editMode ? 'Save Profile' : 'Edit Profile'}
             </EditButton>
-          ) : (
-            <Button
-            onClick={() => handleButtonFollow()}
-            sx={{
-              color: palette.background.alt,
-              backgroundColor: palette.primary.main,
-              borderRadius: "8px",
-            }}
-          >
-            {followText}
-          </Button>
-        )}
+          )}
         </Header>
-        <Location variant="subtitle2">{profile.place || 'Internet'}</Location>
+        <Box display="flex" alignItems="center" gap="1rem" mb="0.5rem">
+              <Typography color={medium}>{followers} Followers</Typography>
+              <Typography color={medium}>{followed} Following</Typography>
+        </Box>
+        <Box display="flex" alignItems="center" gap="1rem" mb="0.5rem">
+          <LocationOnOutlined fontSize="large" sx={{ color: main }} />
+          <Typography color={medium}>{country}</Typography>
+        </Box>
+        <Box display="flex" alignItems="center" gap="1rem">
+          <CakeOutlined fontSize="large" sx={{ color: main }} />
+          <Typography color={medium} mt="0.5rem">
+            {birthDate}
+          </Typography>
+        </Box>
         {/* Additional content */}
       </Content>
     </Card>
