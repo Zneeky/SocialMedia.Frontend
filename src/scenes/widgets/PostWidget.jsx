@@ -15,7 +15,7 @@ import {
 import FlexBetween from "components/FlexBetween";
 //import Friend from "components/Friend"
 import WidgetWrapper from "components/WidgetWrapper";
-import { useState,useEffect} from "react";
+import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setPost } from "state";
 import Friend from "components/Frined";
@@ -35,14 +35,13 @@ const PostWidget = ({
 }) => {
   const [isComments, setIsComments] = useState(false);
   const [newComment, setNewComment] = useState("");
-  const [commentsCurrent,setCurrentComments]=useState({});
+  const [commentsCurrent, setCurrentComments] = useState({});
   const dispatch = useDispatch();
   const token = useSelector((state) => state.token);
 
   const loggedInUserId = useSelector((state) => state.user.UserId);
   const isLiked = Boolean(likes[loggedInUserId]);
   const likeCount = Object.keys(likes).length;
-
 
   const handleInputBaseKeyDown = (event) => {
     if (event.keyCode === 13 && newComment.trim() !== "") {
@@ -52,19 +51,18 @@ const PostWidget = ({
   };
 
   useEffect(() => {
-    if(comments!=={}){
-      setCurrentComments(comments)
+    if (comments !== {}) {
+      setCurrentComments(comments);
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const  handleCommentSubmit = async (event) => {
-
-    const body={
-      Text:newComment,
-      MediaUrl:null,
-      UserId:loggedInUserId,
-      PostId:postId,
-    }
+  const handleCommentSubmit = async (event) => {
+    const body = {
+      Text: newComment,
+      MediaUrl: null,
+      UserId: loggedInUserId,
+      PostId: postId,
+    };
 
     const postComment = await axios.post(
       `https://localhost:7172/api/posts/comments`,
@@ -77,8 +75,8 @@ const PostWidget = ({
     );
 
     const response = await postComment.data;
-    setCurrentComments(response)
-
+    console.log(response);
+    setCurrentComments(response);
     setNewComment("");
   };
 
@@ -150,11 +148,11 @@ const PostWidget = ({
         <Box mt="0.5rem">
           <Divider />
           <InputBase
-            placeholder={"Turn the tide, comment on waVe🌊"}
+            placeholder={"Turn the tide, comment a waVe🌊..."}
             multiline
             sx={{
               mt: "10px",
-              mb:"10px",
+              mb: "10px",
               height: "6vh",
               width: "100%",
               backgroundColor: palette.neutral.light,
@@ -181,18 +179,60 @@ const PostWidget = ({
               },
             }}
             onKeyDown={handleInputBaseKeyDown}
-            onChange={(e) =>setNewComment(e.target.value)}
+            onChange={(e) => setNewComment(e.target.value)}
             value={newComment}
           />
           <Divider />
-          {commentsCurrent.map((Id,Text,MediaUrl,Username,ProfilePicture,CreatedAt,Likes) => (
-            <Box key={Id}>
-              <FlexBetween>
-              <UserImage image={MediaUrl}/>
-              <Typography sx={{ color: main, m: "0.5rem 0", pl: "1rem" }}>
-                {Text}
-              </Typography>
-              </FlexBetween>
+          {commentsCurrent.map((comment) => (
+            <Box key={comment.Id} mt="6px" mr="10px" sx={{ display: "flex", flexDirection: "row",justifyContent: 'space-between' }}>
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "flex-start",
+                  marginBottom: "1rem",
+                }}
+                gap="1rem"
+              >
+                <UserImage image={comment.ProfilePicture} size="35px" />
+                <Box>
+                  <Box
+                    sx={{
+                      display: "flex",
+                    }}
+                    gap="0.5rem"
+                  >
+                    <Typography sx={{ fontWeight: "bold" }}>
+                      {comment.Username}
+                    </Typography>
+                    <Typography>{comment.Text}</Typography>
+                  </Box>
+                  <Box mt="5px">
+                    <Box
+                      sx={{
+                        display: "flex",
+                      }}
+                      gap="1rem"
+                    >
+                      <Typography
+                        sx={{ fontSize: "0.75rem", color: "#8E8E8E" }}
+                      >
+                        {`${comment.CreatedAt}d`}
+                      </Typography>
+                      <Typography
+                        sx={{ fontSize: "0.75rem", color: "#8E8E8E" }}
+                      >
+                        {comment.Likes ? comment.Likes.length : 0} likes
+                      </Typography>
+                      <Typography
+                        sx={{ fontSize: "0.75rem", color: "#8E8E8E" }}
+                      >
+                        {comment.Replies ? comment.Replies.length : 0} replies
+                      </Typography>
+                    </Box>
+                  </Box>
+                </Box>
+              </Box>
+              <FavoriteBorderOutlined sx={{ fontSize: "15px" }} />
             </Box>
           ))}
         </Box>
