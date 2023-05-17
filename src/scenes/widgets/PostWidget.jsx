@@ -34,14 +34,36 @@ const PostWidget = ({
   comments,
 }) => {
   const [isComments, setIsComments] = useState(false);
+  const [isLikedPost, setIsLikedPost] = useState(false);
   const [newComment, setNewComment] = useState("");
   const [commentsCurrent, setCurrentComments] = useState({});
   const dispatch = useDispatch();
   const token = useSelector((state) => state.token);
 
   const loggedInUserId = useSelector((state) => state.user.UserId);
-  const isLiked = Boolean(likes[loggedInUserId]);
   const likeCount = Object.keys(likes).length;
+
+  const { palette } = useTheme();
+  const main = palette.neutral.main;
+  const primary = palette.primary.main;
+
+  const checkIsLiked = async () =>{
+    const body = {
+      UserId: loggedInUserId,
+      PostId: postId,
+    };
+    const likeState= await axios.get(
+      `https://localhost:7172/api/posts/likes?userId=${body.UserId}&postId=${body.PostId}`,
+      null, // Request body for a POST request
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    const response=await likeState.data;
+    setIsLikedPost(response);
+  }
 
   const handleInputBaseKeyDown = (event) => {
     if (event.keyCode === 13 && newComment.trim() !== "") {
@@ -54,6 +76,7 @@ const PostWidget = ({
     if (comments !== {}) {
       setCurrentComments(comments);
     }
+    checkIsLiked();
   }, [comments]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleCommentSubmit = async (event) => {
@@ -80,23 +103,41 @@ const PostWidget = ({
     setNewComment("");
   };
 
+  //Logic might be added here
   const handleToggleComments = () => {
     setIsComments(!isComments);
   };
 
-  const { palette } = useTheme();
-  const main = palette.neutral.main;
-  const primary = palette.primary.main;
+  //Post liking API calls
+  const handleLike = async () => {
+    const body = {
+      UserId: loggedInUserId,
+      PostId: postId,
+    };
+    if(isLikedPost){
+      const response =await axios.delete(
+        `https://localhost:7172/api/posts/likes?userId=${body.UserId}&postId=${body.PostId}`,
+        null, // Request body for a POST request
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
-  const patchLike = async () => {
-    const response = await fetch(`https://localhost:7172/api/`, {
-      method: "PATCH",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    const updatedPost = await response.json();
-    dispatch(setPost({ post: updatedPost }));
+      setIsLikedPost(false)
+    }else{
+      const response =await  axios.post(
+        `https://localhost:7172/api/posts/likes?userId=${body.UserId}&postId=${body.PostId}`,
+        null, // Request body for a POST request
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setIsLikedPost(true)
+    }
   };
 
   return (
@@ -122,8 +163,8 @@ const PostWidget = ({
       <FlexBetween mt="0.25rem">
         <FlexBetween gap="1rem">
           <FlexBetween gap="0.3rem">
-            <IconButton onClick={patchLike}>
-              {isLiked ? (
+            <IconButton onClick={handleLike}>
+              {isLikedPost ? (
                 <FavoriteOutlined sx={{ color: primary }} />
               ) : (
                 <FavoriteBorderOutlined />
