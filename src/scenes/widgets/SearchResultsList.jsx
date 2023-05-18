@@ -12,7 +12,7 @@ const SearchResultsList = ({profileValues}) =>{
     console.log(profileValues);
     return(
             <>
-                {profileValues.map(
+                {profileValues.$values.map(
                  ({
                     Name,
                     ProfilePicture,

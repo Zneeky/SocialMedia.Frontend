@@ -186,7 +186,7 @@ const UserWidget = ({ userId, isNotProfile = true}) => {
   return (
     <WidgetWrapper>
       {/* FIRST ROW */}
-      <FlexBetween gap="0.5rem" pb="1.1rem">
+      <FlexBetween gap="0.5rem" pb="1.1rem" >
         <FlexBetween gap="1rem">
           <UserImage image={user.ProfilePicture} />
           <Box>

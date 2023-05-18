@@ -1,4 +1,4 @@
-import { Box, useMediaQuery } from "@mui/material";
+import { Box, useMediaQuery, useTheme } from "@mui/material";
 import { useSelector,useDispatch } from "react-redux";
 import Navbar from "scenes/navbar";
 import UserWidget from "scenes/widgets/UserWidget";
@@ -13,6 +13,7 @@ const HomePage = () => {
     const isNonMobileScreens = useMediaQuery("(min-width:1000px)");
     const user = useSelector((state) => state.user);
     const profile = useSelector((state) => state.user);
+    const {palette} = useTheme();
     const userId = user?.UserId;
     const picturePath = user?.ProfilePicture;
 
@@ -30,27 +31,29 @@ const HomePage = () => {
     <Box>
         <Navbar/>
         <Box
-            widht="100%"
+            width="100%"
             padding="2rem 6%"
             display={isNonMobileScreens ? "flex" : "block"}
             gap="0.5rem"
-            justifyContent="space-between"    
+            justifyContent="space-between"
+            backgroundColor={palette.background.alt}
         >
-            <Box flexBasis={isNonMobileScreens ? "26%" : undefined}>
-                <UserWidget userId={userId} />
-            </Box>
+          {isNonMobileScreens && (
+                <Box flexBasis="26%">
+                    
+                </Box>
+            )}
             <Box 
-                flexBasis={isNonMobileScreens ? "42%" : undefined}
+                flexBasis={isNonMobileScreens ? "42%" : "10%"}
                 mt={isNonMobileScreens ? undefined : "2rem"}
             >
                 <MyPostWidget userId={userId} picturePath={picturePath}/>
                 <PostsWidget userId={userId}/>
             </Box>
-            {isNonMobileScreens && (
-                <Box flexBasis="26%">
-                    
-                </Box>
-            )}
+            <Box flexBasis={isNonMobileScreens ? "26%" : "40%"}   
+            >
+                <UserWidget userId={userId} />
+            </Box>
         </Box>
     </Box>
     );

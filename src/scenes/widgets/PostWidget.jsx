@@ -2,6 +2,7 @@ import {
   ChatBubbleOutlineOutlined,
   FavoriteBorderOutlined,
   FavoriteOutlined,
+  FavoriteRounded,
   ShareOutlined,
 } from "@mui/icons-material";
 import {
@@ -21,6 +22,8 @@ import { setPost } from "state";
 import Friend from "components/Frined";
 import UserImage from "components/UserImage";
 import axios from "axios";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faComment } from "@fortawesome/free-regular-svg-icons";
 
 const PostWidget = ({
   postId,
@@ -35,35 +38,34 @@ const PostWidget = ({
 }) => {
   const [isComments, setIsComments] = useState(false);
   const [isLikedPost, setIsLikedPost] = useState(false);
+  const [likeCount,setLikeCount] = useState(likes.$values.length)
   const [newComment, setNewComment] = useState("");
   const [commentsCurrent, setCurrentComments] = useState({});
   const dispatch = useDispatch();
   const token = useSelector((state) => state.token);
 
   const loggedInUserId = useSelector((state) => state.user.UserId);
-  const likeCount = Object.keys(likes).length;
 
   const { palette } = useTheme();
   const main = palette.neutral.main;
   const primary = palette.primary.main;
 
-  const checkIsLiked = async () =>{
+  const checkIsLiked = async () => {
     const body = {
       UserId: loggedInUserId,
       PostId: postId,
     };
-    const likeState= await axios.get(
+    const likeState = await axios.get(
       `https://localhost:7172/api/posts/likes?userId=${body.UserId}&postId=${body.PostId}`,
-      null, // Request body for a POST request
       {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       }
     );
-    const response=await likeState.data;
+    const response = await likeState.data;
     setIsLikedPost(response);
-  }
+  };
 
   const handleInputBaseKeyDown = (event) => {
     if (event.keyCode === 13 && newComment.trim() !== "") {
@@ -77,7 +79,7 @@ const PostWidget = ({
       setCurrentComments(comments);
     }
     checkIsLiked();
-  }, [comments]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [comments,likes]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleCommentSubmit = async (event) => {
     const body = {
@@ -114,41 +116,45 @@ const PostWidget = ({
       UserId: loggedInUserId,
       PostId: postId,
     };
-    if(isLikedPost){
-      const response =await axios.delete(
+    if (isLikedPost) {
+      const response = await axios.delete(
         `https://localhost:7172/api/posts/likes?userId=${body.UserId}&postId=${body.PostId}`,
-        null, // Request body for a POST request
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
       );
-
-      setIsLikedPost(false)
-    }else{
-      const response =await  axios.post(
+      const newAmaount=likeCount-1;
+      setLikeCount(newAmaount)
+    
+      setIsLikedPost(false);
+    } else {
+      const response = await axios.post(
         `https://localhost:7172/api/posts/likes?userId=${body.UserId}&postId=${body.PostId}`,
-        null, // Request body for a POST request
+        null, // Pass null as the request body since it's a POST request
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
       );
-      setIsLikedPost(true)
+      const newAmaount=likeCount+1;
+      setLikeCount(newAmaount)
+      setIsLikedPost(true);
     }
+    
   };
 
   return (
-    <WidgetWrapper m="2rem 0">
+    <WidgetWrapper m="2rem 0" sx={{pl:0, pr:0}}>
       <Friend
         friendId={postUserId}
         name={username}
         subtitle={location}
         userPicturePath={userPicturePath}
       />
-      <Typography color={main} sx={{ mt: "1rem" }}>
+      <Typography color={main} sx={{ mt: "1rem", pl:"1.5rem", pr:"1.5rem" }}>
         {description}
       </Typography>
       {picturePath && (
@@ -156,16 +162,16 @@ const PostWidget = ({
           width="100%"
           height="auto"
           alt="post"
-          style={{ borderRadius: "0.75rem", marginTop: "0.75rem" }}
+          style={{  marginTop: "0.75rem" }}
           src={`${picturePath}`}
         />
       )}
-      <FlexBetween mt="0.25rem">
+      <FlexBetween mt="0.25rem" sx={{pl:"1.5rem", pr:"1.5rem"}}>
         <FlexBetween gap="1rem">
           <FlexBetween gap="0.3rem">
             <IconButton onClick={handleLike}>
               {isLikedPost ? (
-                <FavoriteOutlined sx={{ color: primary }} />
+                <FavoriteOutlined sx={{color:palette.primary.main}} />
               ) : (
                 <FavoriteBorderOutlined />
               )}
@@ -175,9 +181,11 @@ const PostWidget = ({
 
           <FlexBetween gap="0.3rem">
             <IconButton onClick={() => setIsComments(!isComments)}>
-              <ChatBubbleOutlineOutlined />
+            <FontAwesomeIcon icon={faComment} />
             </IconButton>
-            <Typography>{commentsCurrent.length}</Typography>
+            {commentsCurrent.$values && (
+              <Typography>{commentsCurrent.$values.length}</Typography>
+            )}
           </FlexBetween>
         </FlexBetween>
 
@@ -224,8 +232,17 @@ const PostWidget = ({
             value={newComment}
           />
           <Divider />
-          {commentsCurrent.map((comment) => (
-            <Box key={comment.Id} mt="6px" mr="10px" sx={{ display: "flex", flexDirection: "row",justifyContent: 'space-between' }}>
+          {commentsCurrent.$values.map((comment) => (
+            <Box
+              key={comment.Id}
+              mt="6px"
+              mr="10px"
+              sx={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-between",
+              }}
+            >
               <Box
                 sx={{
                   display: "flex",

@@ -16,6 +16,7 @@ const Friend = ({ friendId, name, subtitle, userPicturePath }) => {
   const { palette } = useTheme();
   const primaryLight = palette.primary.light;
   const primaryDark = palette.primary.dark;
+  const border=palette.neutral.light;
   const main = palette.neutral.main;
   const medium = palette.neutral.medium;
 
@@ -43,7 +44,7 @@ const Friend = ({ friendId, name, subtitle, userPicturePath }) => {
   };
 
   return (
-    <FlexBetween>
+    <FlexBetween sx={{pl:"1.5rem", pr:"1.5rem"}}>
       <FlexBetween gap="1rem">
         <UserImage image={userPicturePath} size="55px" />
         <Box

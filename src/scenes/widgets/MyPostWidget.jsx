@@ -61,8 +61,6 @@ const MyPostWidget = ({ _id, picturePath }) => {
   const medium = palette.neutral.medium;
 
   const handlePost = async () => {
-    console.log(user);
-    console.log(token);
     const postData = {
       UserId: user.UserId,
       Text: post,
@@ -93,8 +91,6 @@ const MyPostWidget = ({ _id, picturePath }) => {
       pageNumber: 1,
       pageSize: 15,
     };
-
-    console.log(token);
     const response = await axios.get(
       `https://localhost:7172/api/posts?UserId=${getPostsRequest.UserId}&pageNumber=${getPostsRequest.pageNumber}&pageSize=${getPostsRequest.pageSize}`,
       {
@@ -112,7 +108,7 @@ const MyPostWidget = ({ _id, picturePath }) => {
   };
 
   return (
-    <WidgetWrapper>
+    <WidgetWrapper >
       <FlexBetween gap="1.5rem">
         <UserImage image={picturePath} />
         <InputBase
