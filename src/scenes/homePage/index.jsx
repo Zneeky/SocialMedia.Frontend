@@ -59,40 +59,41 @@ const HomePage = () => {
     );
   } else if (isL) {
     return (
-     <Box width="100%" height="100%" backgroundColor="red" sx={{zIndex:-5}}>
+      <Box
+        display="flex"
+        backgroundColor={palette.background.alt}
+        sx={{ zIndex: -5 }}
+      >
         <SideBar />
-
-        <Box
-            ml="2rem"
-            padding="2rem 0rem 2rem 2rem"
-            display="flex"
-            flexDirection="column"
-          >
-            <MyPostWidget userId={userId} picturePath={picturePath} />
-            <PostsWidget userId={userId} />
-          </Box>
-          <Box padding="2rem 0rem 2rem 0rem">
-            <UserWidget userId={userId} />
-          </Box>
+        <div style={{ width: "1rem", flex: "1" }}></div>{" "}
+        {/* Empty element for spacing */}
+        <Box padding="2rem 0rem 2rem 0rem" width="472px">
+          <MyPostWidget userId={userId} picturePath={picturePath} />
+          <PostsWidget userId={userId} />
+        </Box>
+        <Box padding="2rem 5rem 2rem 2rem">
+          <UserWidget userId={userId} />
+        </Box>
       </Box>
     );
   } else if (isMD) {
     return (
-      <Box display="flex"  backgroundColor={palette.background.alt} sx={{ zIndex: -5 }}>
-  <SideBar />
-  <div style={{ width: '1rem', flex:'1'}}></div> {/* Empty element for spacing */}
-  <Box
-    padding="2rem 0rem 2rem 0rem"
-    width="472px"
-  >
-    <MyPostWidget userId={userId} picturePath={picturePath} />
-    <PostsWidget userId={userId} />
-  </Box>
-  <Box padding="2rem 5rem 2rem 2rem">
-    <UserWidget userId={userId} />
-  </Box>
-</Box>
-        
+      <Box
+        display="flex"
+        backgroundColor={palette.background.alt}
+        sx={{ zIndex: -5 }}
+      >
+        <SideBar />
+        <div style={{ width: "1rem", flex: "1" }}></div>{" "}
+        {/* Empty element for spacing */}
+        <Box padding="2rem 0rem 2rem 0rem" width="472px">
+          <MyPostWidget userId={userId} picturePath={picturePath} />
+          <PostsWidget userId={userId} />
+        </Box>
+        <Box padding="2rem 5rem 2rem 2rem">
+          <UserWidget userId={userId} />
+        </Box>
+      </Box>
     );
   } else if (isSM) {
   } else {
