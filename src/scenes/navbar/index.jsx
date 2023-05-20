@@ -106,7 +106,7 @@ const Navbar = () => {
             position: "absolute",
             overflow: "auto",
             height: "12rem",
-            backgroundColor: theme.palette.background.alt,
+            backgroundColor: theme.palette.background.default,
             "&::-webkit-scrollbar": {
               width: "0.4em",
             },
