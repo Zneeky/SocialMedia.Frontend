@@ -65,14 +65,16 @@ const HomePage = () => {
         sx={{ zIndex: -5 }}
       >
         <SideBar />
-        <div style={{ width: "1rem", flex: "1" }}></div>{" "}
-        {/* Empty element for spacing */}
-        <Box padding="2rem 0rem 2rem 0rem" width="472px">
-          <MyPostWidget userId={userId} picturePath={picturePath} />
-          <PostsWidget userId={userId} />
-        </Box>
-        <Box padding="2rem 5rem 2rem 2rem">
-          <UserWidget userId={userId} />
+        <Box ml="250px" width="100%" display="flex" p="0">
+          <Box margin="0 auto" display="flex" p="0">
+            <Box padding="2rem 2rem 0rem 0rem" width="472px">
+              <MyPostWidget userId={userId} picturePath={picturePath} />
+              <PostsWidget userId={userId} />
+            </Box>
+            <Box padding="2rem 0rem 0rem 0rem">
+              <UserWidget userId={userId} />
+            </Box>
+          </Box>
         </Box>
       </Box>
     );
@@ -84,14 +86,16 @@ const HomePage = () => {
         sx={{ zIndex: -5 }}
       >
         <SideBar />
-        <div style={{ width: "1rem", flex: "1" }}></div>{" "}
-        {/* Empty element for spacing */}
-        <Box padding="2rem 0rem 2rem 0rem" width="472px">
-          <MyPostWidget userId={userId} picturePath={picturePath} />
-          <PostsWidget userId={userId} />
-        </Box>
-        <Box padding="2rem 5rem 2rem 2rem">
-          <UserWidget userId={userId} />
+        <Box ml="72px" width="100%" display="flex" p="0">
+          <Box margin="0 auto" display="flex" p="0">
+            <Box padding="2rem 2rem 0rem 0rem" width="472px">
+              <MyPostWidget userId={userId} picturePath={picturePath} />
+              <PostsWidget userId={userId} />
+            </Box>
+            <Box padding="2rem 0rem 0rem 0rem">
+              <UserWidget userId={userId} />
+            </Box>
+          </Box>
         </Box>
       </Box>
     );
