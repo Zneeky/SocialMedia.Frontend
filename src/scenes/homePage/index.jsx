@@ -34,25 +34,21 @@ const HomePage = () => {
   console.log(profil);
   if (isXL) {
     return (
-      <Box>
-        <Box
-          width="100%"
-          display="flex"
-          gap="0.5rem"
-          backgroundColor={palette.background.alt}
-          justifyContent="start"
-        >
-          <Box
-            ml="2rem"
-            padding="2rem 0rem 2rem 2rem"
-            flexDirection="column"
-            width={isSM ? "480px" : undefined}
-          >
-            <MyPostWidget userId={userId} picturePath={picturePath} />
-            <PostsWidget userId={userId} />
-          </Box>
-          <Box padding="2rem 0rem 2rem 0rem">
-            <UserWidget userId={userId} />
+      <Box
+        display="flex"
+        backgroundColor={palette.background.alt}
+        sx={{ zIndex: -5 }}
+      >
+        <SideBar />
+        <Box ml="250px" width="100%" display="flex" p="0">
+          <Box margin="0 auto" display="flex" p="0">
+            <Box padding="2rem 2rem 0rem 0rem" width="472px">
+              <MyPostWidget userId={userId} picturePath={picturePath} />
+              <PostsWidget userId={userId} />
+            </Box>
+            <Box padding="2rem 0rem 0rem 0rem">
+              <UserWidget userId={userId} />
+            </Box>
           </Box>
         </Box>
       </Box>

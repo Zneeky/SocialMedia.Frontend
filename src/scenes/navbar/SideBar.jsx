@@ -41,7 +41,11 @@ import {
   Settings as SettingsIcon,
 } from "@mui/icons-material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCompass, faHouse,faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCompass,
+  faHouse,
+  faMagnifyingGlass,
+} from "@fortawesome/free-solid-svg-icons";
 import { faPaperPlane } from "@fortawesome/free-regular-svg-icons";
 import UserImage from "components/UserImage";
 
@@ -116,7 +120,7 @@ const SideBar = () => {
         zIndex: 100,
         width: expanded ? 250 : 72,
         height: "100%",
-        backgroundColor: "#ffffff",
+        backgroundColor: background,
         padding: "8px 16px",
         transition: "width 0.2s ease",
       }}
@@ -133,7 +137,11 @@ const SideBar = () => {
         <Typography
           variant="h6"
           component="p"
-          sx={{ color:theme.palette.primary.main, fontSize: 23, fontWeight: 600 }}
+          sx={{
+            color: theme.palette.primary.main,
+            fontSize: 23,
+            fontWeight: 600,
+          }}
         >
           waVe
         </Typography>
@@ -146,10 +154,9 @@ const SideBar = () => {
             <MenuIcon />
           </IconButton>
         )}*/}
-        </Toolbar>
+      </Toolbar>
 
       <List sx={{ marginTop: 1 }}>
-
         {/* <ListItem
           sx={{
             display:"flex",
@@ -266,9 +273,62 @@ const SideBar = () => {
             padding: "8px 16px",
           }}
         >
-          <IconButton
-          >
-            <FontAwesomeIcon icon={faHouse} size="lg" />
+          {expanded ? (
+            <Box
+              display="flex"
+              width="100%"
+              sx={{
+                "&:hover": {
+                  cursor: "pointer",
+                  borderRadius: "20px",
+                  backgroundColor:theme.palette.background.alt,
+                },
+              }}
+            >
+              <IconButton sx={{"&:hover": { backgroundColor: "transparent" }}}>
+                <FontAwesomeIcon
+                  icon={faHouse}
+                  size="lg"
+                  color={theme.palette.button.primary}
+                />
+              </IconButton>
+              <Typography
+                mt="0.6rem"
+                ml="0.5rem"
+                fontWeight={400}
+                fontSize="17px"
+                color={theme.palette.button.primary}
+              >
+                Home
+              </Typography>
+            </Box>
+          ) : (
+            <IconButton>
+              <FontAwesomeIcon
+                icon={faHouse}
+                size="lg"
+                color={theme.palette.button.primary}
+              />
+            </IconButton>
+          )}
+        </ListItem>
+
+        <ListItem
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            height: 60,
+            width: expanded ? 250 : 72,
+            left: -19,
+            padding: "8px 16px",
+          }}
+        >
+          <IconButton>
+            <FontAwesomeIcon
+              icon={faMagnifyingGlass}
+              size="lg"
+              color={theme.palette.button.primary}
+            />
           </IconButton>
         </ListItem>
 
@@ -283,7 +343,11 @@ const SideBar = () => {
           }}
         >
           <IconButton>
-            <FontAwesomeIcon icon={faMagnifyingGlass} size="lg" />
+            <FontAwesomeIcon
+              icon={faCompass}
+              size="lg"
+              color={theme.palette.button.primary}
+            />
           </IconButton>
         </ListItem>
 
@@ -298,7 +362,11 @@ const SideBar = () => {
           }}
         >
           <IconButton>
-            <FontAwesomeIcon icon={faCompass} size="lg" />
+            <FontAwesomeIcon
+              icon={faPaperPlane}
+              size="lg"
+              color={theme.palette.button.primary}
+            />
           </IconButton>
         </ListItem>
 
@@ -313,22 +381,7 @@ const SideBar = () => {
           }}
         >
           <IconButton>
-            <FontAwesomeIcon icon={faPaperPlane} size="lg" />
-          </IconButton>
-        </ListItem>
-
-        <ListItem
-          sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            height: 60,
-            width: expanded ? 250 : 72,
-            left: -19,
-            padding: "8px 16px",
-          }}
-        >
-          <IconButton>
-            <UserImage image={user.ProfilePicture} size="30px"/>
+            <UserImage image={user.ProfilePicture} size="30px" />
           </IconButton>
         </ListItem>
       </List>
