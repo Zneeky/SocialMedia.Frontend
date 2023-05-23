@@ -39,8 +39,8 @@ const HomePage = () => {
         backgroundColor={palette.background.alt}
         sx={{ zIndex: -5 }}
       >
-        <SideBar />
-        <Box ml="250px" width="100%" display="flex" p="0">
+        <SideBar expandSize={300} />
+        <Box ml="300px" width="100%" display="flex" p="0">
           <Box margin="0 auto" display="flex" p="0">
             <Box padding="2rem 2rem 0rem 0rem" width="472px">
               <MyPostWidget userId={userId} picturePath={picturePath} />
@@ -96,7 +96,43 @@ const HomePage = () => {
       </Box>
     );
   } else if (isSM) {
+    return (
+      <Box
+        display="flex"
+        backgroundColor={palette.background.alt}
+        sx={{ zIndex: -5 }}
+      >
+        <SideBar />
+        <Box ml="72px" width="100%" display="flex" p="0">
+          <Box margin="0 auto" display="flex" p="0">
+            <Box padding="2rem 2rem 0rem 0rem" width="472px">
+              <MyPostWidget userId={userId} picturePath={picturePath} />
+              <PostsWidget userId={userId} />
+            </Box>
+          </Box>
+        </Box>
+      </Box>
+    );
   } else {
+    return (
+      <Box>
+        <Navbar />
+      <Box
+        display="flex"
+        backgroundColor={palette.background.alt}
+        sx={{ zIndex: -5 }}
+      >
+        <Box  width="100%" display="flex" p="0">
+          <Box margin="0 auto" display="flex" p="0">
+            <Box padding="2rem 2rem 0rem 0rem" width="472px">
+              <MyPostWidget userId={userId} picturePath={picturePath} />
+              <PostsWidget userId={userId} />
+            </Box>
+          </Box>
+        </Box>
+      </Box>
+      </Box>
+    );
   }
 };
 

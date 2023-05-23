@@ -1,18 +1,21 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Box,
-  Drawer,
   IconButton,
   InputBase,
   List,
   ListItem,
+  Slide,
   ListItemIcon,
   ListItemText,
   Paper,
   Toolbar,
+  Tooltip,
   Typography,
   useMediaQuery,
   useTheme,
+  Fade,
+  Switch,
 } from "@mui/material";
 import {
   Search,
@@ -23,6 +26,7 @@ import {
   Help,
   Menu,
   Close,
+  BorderBottom,
 } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
 import { setMode, setLogout } from "state";
@@ -30,16 +34,6 @@ import { useNavigate } from "react-router-dom";
 import FlexBetween from "components/FlexBetween";
 import axios from "axios";
 import SearchResultsList from "scenes/widgets/SearchResultsList";
-import {
-  Menu as MenuIcon,
-  Search as SearchIcon,
-  Home as HomeIcon,
-  Phone as PhoneIcon,
-  Bookmark as BookmarkIcon,
-  AccountBalanceWallet as WalletIcon,
-  Devices as DevicesIcon,
-  Settings as SettingsIcon,
-} from "@mui/icons-material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCompass,
@@ -49,11 +43,12 @@ import {
 import { faPaperPlane } from "@fortawesome/free-regular-svg-icons";
 import UserImage from "components/UserImage";
 
-const SideBar = () => {
+const SideBar = ({ expandSize = 250 }) => {
   const [isMobileMenuToggled, setIsMobileMenuToggled] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchText, setSearchText] = useState("");
   const [jsonResult, setJsonResults] = useState([]);
+  const slideRef = useRef(null);
   const theme = useTheme();
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -89,26 +84,39 @@ const SideBar = () => {
     const data = await response.data;
     setJsonResults(data);
   };
-  const isLargeScreen = useMediaQuery(theme.breakpoints.up("lg"));
 
   const [expanded, setExpanded] = useState(false);
+  const [checked, setChecked] = useState(false);
+
+  const handleChange = () => {
+    setChecked((prev) => !prev);
+    setExpanded(false);
+  };
 
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth > 1200) {
+      if (window.innerWidth > 1200 && checked === false) {
         setExpanded(true);
       } else {
         setExpanded(false);
       }
     };
 
+    const handleClickOutside = (event) => {
+      if (slideRef.current && !slideRef.current.contains(event.target)) {
+        setChecked(false);
+      }
+    };
+
     handleResize();
     window.addEventListener("resize", handleResize);
+    document.addEventListener("mousedown", handleClickOutside);
 
     return () => {
       window.removeEventListener("resize", handleResize);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, []);
+  }, [checked, slideRef]);
 
   return (
     <Box
@@ -117,15 +125,16 @@ const SideBar = () => {
         position: "fixed",
         top: 0,
         left: 0,
-        zIndex: 100,
-        width: expanded ? 250 : 72,
+        zIndex: 1,
+        width: expanded ? expandSize : 72,
         height: "100%",
         backgroundColor: background,
         padding: "8px 16px",
         transition: "width 0.2s ease",
       }}
     >
-      <Toolbar
+      {/*
+        <Toolbar
         sx={{
           display: "flex",
           justifyContent: expanded ? "space-between" : "center",
@@ -133,19 +142,9 @@ const SideBar = () => {
           opacity: expanded ? 1 : 1,
           transition: "opacity 0.2s ease",
         }}
-      >
-        <Typography
-          variant="h6"
-          component="p"
-          sx={{
-            color: theme.palette.primary.main,
-            fontSize: 23,
-            fontWeight: 600,
-          }}
-        >
-          waVe
-        </Typography>
-        {/*{!expanded && (
+      ></Toolbar>
+        
+        {!expanded && (
           <IconButton
             color="inherit"
             aria-label="Expand Menu"
@@ -154,121 +153,25 @@ const SideBar = () => {
             <MenuIcon />
           </IconButton>
         )}*/}
-      </Toolbar>
 
       <List sx={{ marginTop: 1 }}>
-        {/* <ListItem
+        <ListItem
           sx={{
-            display:"flex",
-            justifyContent:"stretch",
-            "&:hover": {
-              backgroundColor: "green",
-            },
+            m: "0.5rem 0",
+            display: "flex",
+            justifyContent: "space-between",
+            height: 60,
+            width: expanded ? expandSize : 72,
+            left: -20,
+            padding: "8px 16px",
           }}
-        >
-          <ListItemIcon>
-            <HomeIcon />
-          </ListItemIcon>
-          <ListItemText
-            primary="Home"
-            sx={{
-              color: expanded ? "#000" : "transparent",
-              transition: "color 0.2s ease",
-            }}
-          />
-        </ListItem>
-
-        <ListItem>
-          <ListItemIcon>
-            <PhoneIcon />
-          </ListItemIcon>
-          <ListItemText
-            primary="Calls"
-            sx={{
-              color: expanded ? "#000" : "transparent",
-              transition: "color 0.2s ease",
-            }}
-          />
-        </ListItem>
-
-        <ListItem>
-          <ListItemIcon>
-            <BookmarkIcon />
-          </ListItemIcon>
-          <ListItemText
-            primary="Bookmarks"
-            sx={{
-              color: expanded ? "#000" : "transparent",
-              transition: "color 0.2s ease",
-            }}
-          />
-        </ListItem>
-
-        <ListItem>
-          <ListItemIcon>
-            <WalletIcon />
-          </ListItemIcon>
-          <ListItemText
-            primary="Wallet"
-            sx={{
-              color: expanded ? "#000" : "transparent",
-              transition: "color 0.2s ease",
-            }}
-          />
-        </ListItem>
-
-        <ListItem>
-          <ListItemIcon>
-            <DevicesIcon />
-          </ListItemIcon>
-          <ListItemText
-            primary="Devices"
-            sx={{
-              color: expanded ? "#000" : "transparent",
-              transition: "color 0.2s ease",
-            }}
-          />
-        </ListItem>
-
-        <ListItem>
-          <ListItemIcon>
-            <SettingsIcon />
-          </ListItemIcon>
-          <ListItemText
-            primary="Settings"
-            sx={{
-              color: expanded ? "#000" : "transparent",
-              transition: "color 0.2s ease",
-            }}
-          />
-            <Paper
-            component="form"
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              width: expanded ? "100%" : "0%",
-              borderRadius: 12,
-              background: "#e2e2e2",
-            }}
-          >
-            <InputBase
-              placeholder="search..."
-              sx={{
-                fontSize: 14,
-                fontWeight: 400,
-                color: "#000",
-                width: "100%",
-                padding: 1,
-              }}
-            />
-          </Paper>
-        </ListItem>*/}
+        ></ListItem>
         <ListItem
           sx={{
             display: "flex",
             justifyContent: "space-between",
             height: 60,
-            width: expanded ? 250 : 72,
+            width: expanded ? expandSize : 72,
             left: -20,
             padding: "8px 16px",
           }}
@@ -281,11 +184,13 @@ const SideBar = () => {
                 "&:hover": {
                   cursor: "pointer",
                   borderRadius: "20px",
-                  backgroundColor:theme.palette.background.alt,
+                  backgroundColor: theme.palette.background.alt,
                 },
               }}
             >
-              <IconButton sx={{"&:hover": { backgroundColor: "transparent" }}}>
+              <IconButton
+                sx={{ "&:hover": { backgroundColor: "transparent" } }}
+              >
                 <FontAwesomeIcon
                   icon={faHouse}
                   size="lg"
@@ -295,7 +200,7 @@ const SideBar = () => {
               <Typography
                 mt="0.6rem"
                 ml="0.5rem"
-                fontWeight={400}
+                fontWeight={300}
                 fontSize="17px"
                 color={theme.palette.button.primary}
               >
@@ -303,13 +208,21 @@ const SideBar = () => {
               </Typography>
             </Box>
           ) : (
-            <IconButton>
-              <FontAwesomeIcon
-                icon={faHouse}
-                size="lg"
-                color={theme.palette.button.primary}
-              />
-            </IconButton>
+            <Tooltip
+              title="Home"
+              placement="right"
+              TransitionComponent={Fade}
+              TransitionProps={{ timeout: 600 }}
+              arrow
+            >
+              <IconButton>
+                <FontAwesomeIcon
+                  icon={faHouse}
+                  size="lg"
+                  color={theme.palette.button.primary}
+                />
+              </IconButton>
+            </Tooltip>
           )}
         </ListItem>
 
@@ -318,18 +231,157 @@ const SideBar = () => {
             display: "flex",
             justifyContent: "space-between",
             height: 60,
-            width: expanded ? 250 : 72,
+            width: expanded ? expandSize : 72,
             left: -19,
             padding: "8px 16px",
           }}
         >
-          <IconButton>
-            <FontAwesomeIcon
-              icon={faMagnifyingGlass}
-              size="lg"
-              color={theme.palette.button.primary}
-            />
-          </IconButton>
+          <Box onClick={handleChange} width="100%">
+            {expanded ? (
+              <Box
+                display="flex"
+                width="100%"
+                sx={{
+                  "&:hover": {
+                    cursor: "pointer",
+                    borderRadius: "20px",
+                    backgroundColor: theme.palette.background.alt,
+                  },
+                }}
+              >
+                <IconButton
+                  sx={{ "&:hover": { backgroundColor: "transparent" } }}
+                >
+                  <FontAwesomeIcon
+                    icon={faMagnifyingGlass}
+                    size="lg"
+                    color={theme.palette.button.primary}
+                  />
+                </IconButton>
+                <Typography
+                  mt="0.6rem"
+                  ml="0.5rem"
+                  fontWeight={300}
+                  fontSize="17px"
+                  color={theme.palette.button.primary}
+                >
+                  Search
+                </Typography>
+              </Box>
+            ) : (
+              <Tooltip
+                title="Search"
+                placement="right"
+                TransitionComponent={Fade}
+                TransitionProps={{ timeout: 600 }}
+                arrow
+              >
+                <IconButton>
+                  <FontAwesomeIcon
+                    icon={faMagnifyingGlass}
+                    size="lg"
+                    color={theme.palette.button.primary}
+                  />
+                </IconButton>
+              </Tooltip>
+            )}
+          </Box>
+          <Slide
+            direction="right"
+            in={checked}
+            mountOnEnter
+            unmountOnExit
+            ref={slideRef}
+          >
+            <Box
+              height="938px"
+              display="block"
+              textAlign="center"
+              bgcolor={theme.palette.background.default}
+              zIndex={3}
+              position="fixed" // Add position: "fixed" to ensure the box remains visible
+              top={0} // Adjust top, left, right, and bottom values as needed
+              left={73}
+              right={0}
+              bottom={0}
+              overflow="auto" // Add overflow: "auto" to enable scrolling within the box if needed
+              width="397px"
+              sx={{
+                borderTopRightRadius: "16px",
+                borderBottomRightRadius: "16px",
+                borderRight: `1px solid ${theme.palette.neutral.light}`,
+              }}
+            >
+              <Box
+                width="100%"
+                height="100%"
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  overflowY: "hidden",
+                }}
+              >
+                <Box
+                  sx={{
+                    p: "12px 14px 36px 24px",
+                    m: "10px 0px",
+                  }}
+                >
+                  <Typography
+                    sx={{
+                      textAlign: "left",
+                      m: "0!important",
+                      wordWrap: "break-word",
+                      position: "relative",
+                      fontWeight: 500,
+                      fontSize: "25px",
+                    }}
+                  >
+                    Search
+                  </Typography>
+                </Box>
+                <Box
+                  sx={{
+                    position: "relative",
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "flex-start",
+                    alignSelf: "auto",
+                    flexGrow: "1",
+                    overflowY: "visible",
+                  }}
+                >
+                  <Box
+                    sx={{
+                      m:"0 16px",
+                      flexDirection:"column",
+                      display:"flex",
+                      flex:"0 1 auto",
+                      alignItems:"center",
+                      justifyContent:"flex-start",
+                      position:"relative",
+                      flexGrow:"0",
+                      mb:"24px"
+                    }}
+                  >
+                    <InputBase sx={{
+                      borderRadius:"8px",
+                      width:"100%",
+                      height:"40px",
+                      zIndex:2,
+                      background:theme.palette.background.alt,
+                      boxSizing:"border-box",
+                      padding:"3px 16px",
+                      textAlign:"left",
+                      outline:"none",
+
+                      }} />
+                  </Box>
+                  <Box></Box>
+                </Box>
+              </Box>
+            </Box>
+          </Slide>
         </ListItem>
 
         <ListItem
@@ -337,18 +389,59 @@ const SideBar = () => {
             display: "flex",
             justifyContent: "space-between",
             height: 60,
-            width: expanded ? 250 : 72,
+            width: expanded ? expandSize : 72,
             left: -19,
             padding: "8px 16px",
           }}
         >
-          <IconButton>
-            <FontAwesomeIcon
-              icon={faCompass}
-              size="lg"
-              color={theme.palette.button.primary}
-            />
-          </IconButton>
+          {expanded ? (
+            <Box
+              display="flex"
+              width="100%"
+              sx={{
+                "&:hover": {
+                  cursor: "pointer",
+                  borderRadius: "20px",
+                  backgroundColor: theme.palette.background.alt,
+                },
+              }}
+            >
+              <IconButton
+                sx={{ "&:hover": { backgroundColor: "transparent" } }}
+              >
+                <FontAwesomeIcon
+                  icon={faCompass}
+                  size="lg"
+                  color={theme.palette.button.primary}
+                />
+              </IconButton>
+              <Typography
+                mt="0.6rem"
+                ml="0.5rem"
+                fontWeight={300}
+                fontSize="17px"
+                color={theme.palette.button.primary}
+              >
+                Explore
+              </Typography>
+            </Box>
+          ) : (
+            <Tooltip
+              title="Explore"
+              placement="right"
+              TransitionComponent={Fade}
+              TransitionProps={{ timeout: 600 }}
+              arrow
+            >
+              <IconButton>
+                <FontAwesomeIcon
+                  icon={faCompass}
+                  size="lg"
+                  color={theme.palette.button.primary}
+                />
+              </IconButton>
+            </Tooltip>
+          )}
         </ListItem>
 
         <ListItem
@@ -356,18 +449,59 @@ const SideBar = () => {
             display: "flex",
             justifyContent: "space-between",
             height: 60,
-            width: expanded ? 250 : 72,
+            width: expanded ? expandSize : 72,
             left: -19,
             padding: "8px 16px",
           }}
         >
-          <IconButton>
-            <FontAwesomeIcon
-              icon={faPaperPlane}
-              size="lg"
-              color={theme.palette.button.primary}
-            />
-          </IconButton>
+          {expanded ? (
+            <Box
+              display="flex"
+              width="100%"
+              sx={{
+                "&:hover": {
+                  cursor: "pointer",
+                  borderRadius: "20px",
+                  backgroundColor: theme.palette.background.alt,
+                },
+              }}
+            >
+              <IconButton
+                sx={{ "&:hover": { backgroundColor: "transparent" } }}
+              >
+                <FontAwesomeIcon
+                  icon={faPaperPlane}
+                  size="lg"
+                  color={theme.palette.button.primary}
+                />
+              </IconButton>
+              <Typography
+                mt="0.6rem"
+                ml="0.5rem"
+                fontWeight={300}
+                fontSize="17px"
+                color={theme.palette.button.primary}
+              >
+                Messages
+              </Typography>
+            </Box>
+          ) : (
+            <Tooltip
+              title="Messages"
+              placement="right"
+              TransitionComponent={Fade}
+              TransitionProps={{ timeout: 600 }}
+              arrow
+            >
+              <IconButton>
+                <FontAwesomeIcon
+                  icon={faPaperPlane}
+                  size="lg"
+                  color={theme.palette.button.primary}
+                />
+              </IconButton>
+            </Tooltip>
+          )}
         </ListItem>
 
         <ListItem
@@ -375,14 +509,51 @@ const SideBar = () => {
             display: "flex",
             justifyContent: "space-between",
             height: 60,
-            width: expanded ? 250 : 72,
+            width: expanded ? expandSize : 72,
             left: -19,
             padding: "8px 16px",
           }}
         >
-          <IconButton>
-            <UserImage image={user.ProfilePicture} size="30px" />
-          </IconButton>
+          {expanded ? (
+            <Box
+              display="flex"
+              width="100%"
+              sx={{
+                "&:hover": {
+                  cursor: "pointer",
+                  borderRadius: "20px",
+                  backgroundColor: theme.palette.background.alt,
+                },
+              }}
+            >
+              <IconButton
+                sx={{ "&:hover": { backgroundColor: "transparent" } }}
+              >
+                <UserImage image={user.ProfilePicture} size="30px" />
+              </IconButton>
+              <Typography
+                mt="0.6rem"
+                ml="0.5rem"
+                fontWeight={300}
+                fontSize="17px"
+                color={theme.palette.button.primary}
+              >
+                Profile
+              </Typography>
+            </Box>
+          ) : (
+            <Tooltip
+              title="Profile"
+              placement="right"
+              TransitionComponent={Fade}
+              TransitionProps={{ timeout: 600 }}
+              arrow
+            >
+              <IconButton>
+                <UserImage image={user.ProfilePicture} size="30px" />
+              </IconButton>
+            </Tooltip>
+          )}
         </ListItem>
       </List>
 
@@ -393,7 +564,7 @@ const SideBar = () => {
           display: "flex",
           justifyContent: "space-between",
           height: 60,
-          width: expanded ? 250 : 72,
+          width: expanded ? expandSize : 72,
           left: 0,
           padding: "8px 16px",
         }}
