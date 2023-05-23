@@ -27,6 +27,7 @@ import {
   Menu,
   Close,
   BorderBottom,
+  ClearOutlined,
 } from "@mui/icons-material";
 import { useDispatch, useSelector } from "react-redux";
 import { setMode, setLogout } from "state";
@@ -353,29 +354,45 @@ const SideBar = ({ expandSize = 250 }) => {
                 >
                   <Box
                     sx={{
-                      m:"0 16px",
-                      flexDirection:"column",
-                      display:"flex",
-                      flex:"0 1 auto",
-                      alignItems:"center",
-                      justifyContent:"flex-start",
-                      position:"relative",
-                      flexGrow:"0",
-                      mb:"24px"
+                      m: "0 16px",
+                      flexDirection: "column",
+                      display: "flex",
+                      flex: "0 1 auto",
+                      alignItems: "center",
+                      justifyContent: "flex-start",
+                      position: "relative",
+                      flexGrow: "0",
+                      mb: "24px",
                     }}
                   >
-                    <InputBase sx={{
-                      borderRadius:"8px",
-                      width:"100%",
-                      height:"40px",
-                      zIndex:2,
-                      background:theme.palette.background.alt,
-                      boxSizing:"border-box",
-                      padding:"3px 16px",
-                      textAlign:"left",
-                      outline:"none",
-
-                      }} />
+                    <InputBase
+                      value={searchText}
+                      onChange={(e) => setSearchText(e.target.value)}
+                      placeholder="Search..."
+                      sx={{
+                        borderRadius: "8px",
+                        width: "100%",
+                        height: "40px",
+                        zIndex: 1,
+                        background: theme.palette.background.alt,
+                        boxSizing: "border-box",
+                        padding: "3px 16px",
+                        textAlign: "left",
+                        outline: "none",
+                      }}
+                    />
+                    <IconButton
+                      onClick={() => setSearchText("")}
+                      size="small"
+                      sx={{
+                        zIndex: 2,
+                        position:"absolute",
+                        top:"8px",
+                        left:"330px"
+                      }}
+                    >
+                      <ClearOutlined fontSize="inherit" />
+                    </IconButton>
                   </Box>
                   <Box></Box>
                 </Box>
