@@ -369,6 +369,7 @@ const SideBar = ({ expandSize = 250 }) => {
                       value={searchText}
                       onChange={(e) => setSearchText(e.target.value)}
                       placeholder="Search..."
+                      inputProps={{ maxLength: 40 }}
                       sx={{
                         borderRadius: "8px",
                         width: "100%",
