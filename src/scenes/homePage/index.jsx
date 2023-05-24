@@ -124,7 +124,7 @@ const HomePage = () => {
       >
         <Box  width="100%" display="flex" p="0">
           <Box margin="0 auto" display="flex" p="0">
-            <Box padding="2rem 2rem 0rem 0rem" width="472px">
+            <Box padding="2rem 0rem 0rem 0rem" width="350px">
               <MyPostWidget userId={userId} picturePath={picturePath} />
               <PostsWidget userId={userId} />
             </Box>

@@ -1,17 +1,27 @@
 import React from "react";
-import { Box,useTheme } from "@mui/material";
+import { Box,useTheme,List } from "@mui/material";
 import SearchedProfile from "./SearchedProfile";
 
-const SearchResultsList = ({profileValues}) =>{
+const SearchResultsList = ({profileValues = []}) =>{
 
     const { palette } = useTheme();
     const primaryLight = palette.primary.light;
     const primaryDark = palette.primary.dark;
     const main = palette.neutral.main;
     const medium = palette.neutral.medium;
-    console.log(profileValues);
+
     return(
-            <>
+            <List 
+             sx={{
+              border:0,
+              font:"inherit",
+              fontSize:"100%",
+              margin:"8px 0",
+              p:"0",
+              verticalAlign:"baseline",
+              listStyleType:"none"
+             }}
+            >
                 {profileValues.$values.map(
                  ({
                     Name,
@@ -22,12 +32,12 @@ const SearchResultsList = ({profileValues}) =>{
                     <SearchedProfile
                         key={UserId} 
                         SearchedUserId={UserId}
-                        ProfilePicture={ProfilePicture}
                         Name={Name}
+                        ProfilePicture={ProfilePicture} 
                     />
                   )
                 )}
-            </>
+            </List>
     )
 }
 

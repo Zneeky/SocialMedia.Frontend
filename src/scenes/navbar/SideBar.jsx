@@ -43,6 +43,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { faPaperPlane } from "@fortawesome/free-regular-svg-icons";
 import UserImage from "components/UserImage";
+import BigSearch from "components/BigSearch";
 
 const SideBar = ({ expandSize = 250 }) => {
   const [isMobileMenuToggled, setIsMobileMenuToggled] = useState(false);
@@ -55,6 +56,8 @@ const SideBar = ({ expandSize = 250 }) => {
   const navigate = useNavigate();
   const user = useSelector((state) => state.user);
   const token = useSelector((state) => state.token);
+
+  //Colors
   const neutralLight = theme.palette.neutral.light;
   const dark = theme.palette.neutral.dark;
   const background = theme.palette.background.default;
@@ -295,10 +298,10 @@ const SideBar = ({ expandSize = 250 }) => {
             ref={slideRef}
           >
             <Box
-              height="938px"
+              height="100vh"
               display="block"
               textAlign="center"
-              bgcolor={theme.palette.background.default}
+              bgcolor={background}
               zIndex={3}
               position="fixed" // Add position: "fixed" to ensure the box remains visible
               top={0} // Adjust top, left, right, and bottom values as needed
@@ -313,91 +316,7 @@ const SideBar = ({ expandSize = 250 }) => {
                 borderRight: `1px solid ${theme.palette.neutral.light}`,
               }}
             >
-              <Box
-                width="100%"
-                height="100%"
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  overflowY: "hidden",
-                }}
-              >
-                <Box
-                  sx={{
-                    p: "12px 14px 36px 24px",
-                    m: "10px 0px",
-                  }}
-                >
-                  <Typography
-                    sx={{
-                      textAlign: "left",
-                      m: "0!important",
-                      wordWrap: "break-word",
-                      position: "relative",
-                      fontWeight: 500,
-                      fontSize: "25px",
-                    }}
-                  >
-                    Search
-                  </Typography>
-                </Box>
-                <Box
-                  sx={{
-                    position: "relative",
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "flex-start",
-                    alignSelf: "auto",
-                    flexGrow: "1",
-                    overflowY: "visible",
-                  }}
-                >
-                  <Box
-                    sx={{
-                      m: "0 16px",
-                      flexDirection: "column",
-                      display: "flex",
-                      flex: "0 1 auto",
-                      alignItems: "center",
-                      justifyContent: "flex-start",
-                      position: "relative",
-                      flexGrow: "0",
-                      mb: "24px",
-                    }}
-                  >
-                    <InputBase
-                      value={searchText}
-                      onChange={(e) => setSearchText(e.target.value)}
-                      placeholder="Search..."
-                      inputProps={{ maxLength: 40 }}
-                      sx={{
-                        borderRadius: "8px",
-                        width: "100%",
-                        height: "40px",
-                        zIndex: 1,
-                        background: theme.palette.background.alt,
-                        boxSizing: "border-box",
-                        padding: "3px 16px",
-                        textAlign: "left",
-                        outline: "none",
-                      }}
-                    />
-                    <IconButton
-                      onClick={() => setSearchText("")}
-                      size="small"
-                      sx={{
-                        zIndex: 2,
-                        position:"absolute",
-                        top:"8px",
-                        left:"330px"
-                      }}
-                    >
-                      <ClearOutlined fontSize="inherit" />
-                    </IconButton>
-                  </Box>
-                  <Box></Box>
-                </Box>
-              </Box>
+              <BigSearch />
             </Box>
           </Slide>
         </ListItem>
