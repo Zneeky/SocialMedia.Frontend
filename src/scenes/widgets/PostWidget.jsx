@@ -12,9 +12,11 @@ import {
   Typography,
   useTheme,
   InputBase,
+  Dialog,
+  DialogContent,
+  DialogTitle,
 } from "@mui/material";
 import FlexBetween from "components/FlexBetween";
-//import Friend from "components/Friend"
 import WidgetWrapper from "components/WidgetWrapper";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -24,6 +26,7 @@ import UserImage from "components/UserImage";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faComment } from "@fortawesome/free-regular-svg-icons";
+import PostDialog from "components/PostDialog";
 
 const PostWidget = ({
   postId,
@@ -36,9 +39,10 @@ const PostWidget = ({
   likes,
   comments,
 }) => {
+  const [open, setOpen] = useState(false);
   const [isComments, setIsComments] = useState(false);
   const [isLikedPost, setIsLikedPost] = useState(false);
-  const [likeCount,setLikeCount] = useState(likes.$values.length)
+  const [likeCount, setLikeCount] = useState(likes.$values.length);
   const [newComment, setNewComment] = useState("");
   const [commentsCurrent, setCurrentComments] = useState({});
   const dispatch = useDispatch();
@@ -49,6 +53,14 @@ const PostWidget = ({
   const { palette } = useTheme();
   const main = palette.neutral.main;
   const primary = palette.primary.main;
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   const checkIsLiked = async () => {
     const body = {
@@ -79,7 +91,7 @@ const PostWidget = ({
       setCurrentComments(comments);
     }
     checkIsLiked();
-  }, [comments,likes]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [comments, likes]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleCommentSubmit = async (event) => {
     const body = {
@@ -125,9 +137,9 @@ const PostWidget = ({
           },
         }
       );
-      const newAmaount=likeCount-1;
-      setLikeCount(newAmaount)
-    
+      const newAmaount = likeCount - 1;
+      setLikeCount(newAmaount);
+
       setIsLikedPost(false);
     } else {
       const response = await axios.post(
@@ -139,39 +151,69 @@ const PostWidget = ({
           },
         }
       );
-      const newAmaount=likeCount+1;
-      setLikeCount(newAmaount)
+      const newAmaount = likeCount + 1;
+      setLikeCount(newAmaount);
       setIsLikedPost(true);
     }
-    
   };
 
   return (
-    <WidgetWrapper m="2rem 0" sx={{pl:0, pr:0}}>
+    <WidgetWrapper m="2rem 0" sx={{ pl: 0, pr: 0 }}>
       <Friend
         friendId={postUserId}
         name={username}
         subtitle={location}
         userPicturePath={userPicturePath}
       />
-      <Typography color={main} sx={{ mt: "1rem", pl:"1.5rem", pr:"1.5rem" }}>
+      <Typography color={main} sx={{ mt: "1rem", pl: "1.5rem", pr: "1.5rem" }}>
         {description}
       </Typography>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        sx={{
+          "& .MuiPaper-root": {
+            maxHight:"95%",
+            maxWidth:"95%",
+            width: "fit-content",
+            height: "fit-content",
+            m: "auto",
+            borderRadius: "4px",
+            background: "transparent",
+            justifyContent: "center",
+            boxSizing: "border-box",
+            display: "flex",
+          },
+        }}
+      >
+        <PostDialog
+          postId={postId}
+          postUserId={postUserId}
+          username={username}
+          description={description}
+          location={location}
+          picturePath={picturePath}
+          userPicturePath={userPicturePath}
+          likes={likes}
+          comments={comments}
+        />
+      </Dialog>
       {picturePath && (
         <img
           width="100%"
           height="auto"
           alt="post"
-          style={{  marginTop: "0.75rem" }}
+          style={{ marginTop: "0.75rem" }}
           src={`${picturePath}`}
+          onDoubleClick={handleOpen}
         />
       )}
-      <FlexBetween mt="0.25rem" sx={{pl:"1.5rem", pr:"1.5rem"}}>
+      <FlexBetween mt="0.25rem" sx={{ pl: "1.5rem", pr: "1.5rem" }}>
         <FlexBetween gap="1rem">
           <FlexBetween gap="0.3rem">
             <IconButton onClick={handleLike}>
               {isLikedPost ? (
-                <FavoriteOutlined sx={{color:palette.primary.main}} />
+                <FavoriteOutlined sx={{ color: palette.primary.main }} />
               ) : (
                 <FavoriteBorderOutlined />
               )}
@@ -181,7 +223,7 @@ const PostWidget = ({
 
           <FlexBetween gap="0.3rem">
             <IconButton onClick={() => setIsComments(!isComments)}>
-            <FontAwesomeIcon icon={faComment} />
+              <FontAwesomeIcon icon={faComment} />
             </IconButton>
             {commentsCurrent.$values && (
               <Typography>{commentsCurrent.$values.length}</Typography>
