@@ -54,6 +54,15 @@ const PostWidget = ({
   const main = palette.neutral.main;
   const primary = palette.primary.main;
 
+  const updateComments = (updatedComments) => {
+    setCurrentComments(updatedComments);
+  };
+
+  const updateLikes = (newLikeCount, likedStatus) => {
+    setLikeCount(newLikeCount);
+    setIsLikedPost(likedStatus);
+  };
+
   const handleOpen = () => {
     setOpen(true);
   };
@@ -173,8 +182,8 @@ const PostWidget = ({
         onClose={handleClose}
         sx={{
           "& .MuiPaper-root": {
-            maxHight:"95%",
-            maxWidth:"95%",
+            maxHight: "95%",
+            maxWidth: "95%",
             width: "fit-content",
             height: "fit-content",
             m: "auto",
@@ -196,6 +205,10 @@ const PostWidget = ({
           userPicturePath={userPicturePath}
           likes={likes}
           comments={comments}
+          updateComments={updateComments}
+          isLikedPost={isLikedPost}
+          likeCount={likeCount}
+          updateLikes={updateLikes}
         />
       </Dialog>
       {picturePath && (
@@ -208,7 +221,7 @@ const PostWidget = ({
           onDoubleClick={handleOpen}
         />
       )}
-      <FlexBetween mt="0.25rem" sx={{ pl: "1.5rem", pr: "1.5rem" }}>
+      <FlexBetween mt="0.25rem" sx={{ pl: "1.5rem" }}>
         <FlexBetween gap="1rem">
           <FlexBetween gap="0.3rem">
             <IconButton onClick={handleLike}>
@@ -242,12 +255,8 @@ const PostWidget = ({
             placeholder={"Turn the tide, comment a waVe🌊..."}
             multiline
             sx={{
-              mt: "10px",
-              mb: "10px",
               height: "6vh",
               width: "100%",
-              backgroundColor: palette.neutral.light,
-              borderRadius: "8px",
               transition: "rows 0.2s",
               overflowWrap: "break-word", // Enable text wrapping
               wordWrap: "break-word", // Alternative property for older browsers
@@ -274,67 +283,90 @@ const PostWidget = ({
             value={newComment}
           />
           <Divider />
-          {commentsCurrent.$values.map((comment) => (
-            <Box
-              key={comment.Id}
-              mt="6px"
-              mr="10px"
-              sx={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "space-between",
-              }}
-            >
+          <Box
+            height="290px"
+            pl="25px"
+            overflow="auto"
+            sx={{
+              "&::-webkit-scrollbar": {
+                width: "0.4em",
+              },
+              "&::-webkit-scrollbar-track": {
+                borderRadius: "8px",
+                backgroundColor: "transparent",
+              },
+              "&::-webkit-scrollbar-thumb": {
+                backgroundColor: palette.primary.main,
+                borderRadius: "8px",
+                border: "none",
+                "&:hover": {
+                  backgroundColor: palette.primary.dark,
+                },
+              }, // For Internet Explorer and Edge
+            }}
+          >
+            {commentsCurrent.$values.map((comment) => (
               <Box
+                key={comment.Id}
+                mt="6px"
+                mr="10px"
                 sx={{
                   display: "flex",
-                  alignItems: "flex-start",
-                  marginBottom: "1rem",
+                  flexDirection: "row",
+                  justifyContent: "space-between",
                 }}
-                gap="1rem"
               >
-                <UserImage image={comment.ProfilePicture} size="35px" />
-                <Box>
-                  <Box
-                    sx={{
-                      display: "flex",
-                    }}
-                    gap="0.5rem"
-                  >
-                    <Typography sx={{ fontWeight: "bold" }}>
-                      {comment.Username}
-                    </Typography>
-                    <Typography>{comment.Text}</Typography>
-                  </Box>
-                  <Box mt="5px">
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "flex-start",
+                    marginBottom: "1rem",
+                  }}
+                  gap="1rem"
+                >
+                  <UserImage image={comment.ProfilePicture} size="35px" />
+                  <Box>
                     <Box
                       sx={{
                         display: "flex",
                       }}
-                      gap="1rem"
+                      gap="0.5rem"
                     >
-                      <Typography
-                        sx={{ fontSize: "0.75rem", color: "#8E8E8E" }}
-                      >
-                        {`${comment.CreatedAt}d`}
+                      <Typography sx={{ fontWeight: "bold" }}>
+                        {comment.Username}
                       </Typography>
-                      <Typography
-                        sx={{ fontSize: "0.75rem", color: "#8E8E8E" }}
+                      <Typography>{comment.Text}</Typography>
+                    </Box>
+                    <Box mt="5px">
+                      <Box
+                        sx={{
+                          display: "flex",
+                        }}
+                        gap="1rem"
                       >
-                        {comment.Likes ? comment.Likes.length : 0} likes
-                      </Typography>
-                      <Typography
-                        sx={{ fontSize: "0.75rem", color: "#8E8E8E" }}
-                      >
-                        {comment.Replies ? comment.Replies.length : 0} replies
-                      </Typography>
+                        <Typography
+                          sx={{ fontSize: "0.75rem", color: "#8E8E8E" }}
+                        >
+                          {`${comment.CreatedAt}d`}
+                        </Typography>
+                        <Typography
+                          sx={{ fontSize: "0.75rem", color: "#8E8E8E" }}
+                        >
+                          {comment.Likes ? comment.Likes.length : 0} likes
+                        </Typography>
+                        <Typography
+                          sx={{ fontSize: "0.75rem", color: "#8E8E8E" }}
+                        >
+                          {comment.Replies ? comment.Replies.length : 0} replies
+                        </Typography>
+                      </Box>
                     </Box>
                   </Box>
                 </Box>
+                <FavoriteBorderOutlined sx={{ fontSize: "15px" }} />
               </Box>
-              <FavoriteBorderOutlined sx={{ fontSize: "15px" }} />
-            </Box>
-          ))}
+            ))}
+          </Box>
         </Box>
       )}
     </WidgetWrapper>

@@ -38,12 +38,13 @@ const PostDialog = ({
   userPicturePath,
   likes,
   comments,
+  updateComments,
+  isLikedPost,
+  likeCount,
+  updateLikes
 }) => {
-  const [isComments, setIsComments] = useState(false);
-  const [isLikedPost, setIsLikedPost] = useState(false);
-  const [likeCount, setLikeCount] = useState(likes.$values.length);
   const [newComment, setNewComment] = useState("");
-  const [commentsCurrent, setCurrentComments] = useState({});
+  const [commentsCurrent, setCurrentComments] = useState(comments|| []);
   const dispatch = useDispatch();
   const token = useSelector((state) => state.token);
 
@@ -58,22 +59,6 @@ const PostDialog = ({
   const isL = useMediaQuery("(min-width:1200px)");
   const isXL = useMediaQuery("(min-width:1500px)");
 
-  const checkIsLiked = async () => {
-    const body = {
-      UserId: loggedInUserId,
-      PostId: postId,
-    };
-    const likeState = await axios.get(
-      `https://localhost:7172/api/posts/likes?userId=${body.UserId}&postId=${body.PostId}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    const response = await likeState.data;
-    setIsLikedPost(response);
-  };
 
   const handleInputBaseKeyDown = (event) => {
     if (event.keyCode === 13 && newComment.trim() !== "") {
@@ -82,12 +67,6 @@ const PostDialog = ({
     }
   };
 
-  useEffect(() => {
-    if (comments !== {}) {
-      setCurrentComments(comments);
-    }
-    checkIsLiked();
-  }, [comments, likes]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleCommentSubmit = async (event) => {
     const body = {
@@ -109,8 +88,9 @@ const PostDialog = ({
 
     const response = await postComment.data;
     console.log(response);
-    setCurrentComments(response);
     setNewComment("");
+    setCurrentComments(response)
+    updateComments(response);
   };
 
   //Post liking API calls
@@ -119,6 +99,10 @@ const PostDialog = ({
       UserId: loggedInUserId,
       PostId: postId,
     };
+  
+    let newLikeCount;
+    let likedStatus;
+  
     if (isLikedPost) {
       const response = await axios.delete(
         `https://localhost:7172/api/posts/likes?userId=${body.UserId}&postId=${body.PostId}`,
@@ -128,24 +112,24 @@ const PostDialog = ({
           },
         }
       );
-      const newAmaount = likeCount - 1;
-      setLikeCount(newAmaount);
-
-      setIsLikedPost(false);
+      newLikeCount = likeCount - 1;
+      likedStatus = false;
     } else {
       const response = await axios.post(
         `https://localhost:7172/api/posts/likes?userId=${body.UserId}&postId=${body.PostId}`,
-        null, // Pass null as the request body since it's a POST request
+        null,
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
       );
-      const newAmaount = likeCount + 1;
-      setLikeCount(newAmaount);
-      setIsLikedPost(true);
+      newLikeCount = likeCount + 1;
+      likedStatus = true;
     }
+  
+    // Update likes in parent component
+    updateLikes(newLikeCount, likedStatus);
   };
 
   if (isXL) {
@@ -164,10 +148,9 @@ const PostDialog = ({
         }}
       >
         <Box
-          maxWidth="372px"
-          maxHeight="520px"
+          width="372px"
+          height="520px"
           alt="post"
-          aspectRatio="372/520"
           flexBasis="372px"
           justifyContent="center"
           flexGrow={1}
@@ -176,7 +159,6 @@ const PostDialog = ({
           flexDirection="column"
           position="relative"
           overflow="hidden"
-          style={{ marginTop: "0.75rem" }}
           backgroundColor="rgb(0,0,0)"
         >
           <Box
@@ -200,7 +182,9 @@ const PostDialog = ({
             pointerEvents: "auto",
           }}
         >
-          <Box p="14px 4px 14px 16px">
+          <Box p="14px 4px 14px 0px"
+               borderRadiusRadius="4px"
+          >
             <Friend
               friendId={postUserId}
               name={username}
@@ -217,12 +201,19 @@ const PostDialog = ({
 
           <Divider />
 
-          <Box>
-          {commentsCurrent.$values.map((comment) => (
+          <Box width="482px" height="290px" pr="5px" overflow="auto"
+               sx={{
+                '&::-webkit-scrollbar': {
+                  display: 'none',
+                },
+                scrollbarWidth: 'none',
+                msOverflowStyle: 'none', // For Internet Explorer and Edge
+              }}
+          >
+          {commentsCurrent && commentsCurrent.$values && commentsCurrent.$values.map((comment) => (
                 <Box
                   key={comment.Id}
-                  mt="6px"
-                  mr="10px"
+                  p="14px 4px 14px 28px"
                   sx={{
                     display: "flex",
                     flexDirection: "row",
@@ -233,7 +224,7 @@ const PostDialog = ({
                     sx={{
                       display: "flex",
                       alignItems: "flex-start",
-                      marginBottom: "1rem",
+                      marginBottom: "0.4rem",
                     }}
                     gap="1rem"
                   >
@@ -281,7 +272,7 @@ const PostDialog = ({
                 </Box>
               ))}
           </Box>
-          <FlexBetween mt="0.25rem" sx={{ pl: "1.5rem", pr: "1.5rem" }}>
+          <FlexBetween mt="0.25rem" sx={{ pl: "1.5rem", }}>
             <FlexBetween gap="1rem">
               <FlexBetween gap="0.3rem">
                 <IconButton onClick={handleLike}>
@@ -295,7 +286,7 @@ const PostDialog = ({
               </FlexBetween>
 
               <FlexBetween gap="0.3rem">
-                <IconButton onClick={() => setIsComments(!isComments)}>
+                <IconButton>
                   <FontAwesomeIcon icon={faComment} />
                 </IconButton>
                 {commentsCurrent.$values && (
@@ -308,19 +299,14 @@ const PostDialog = ({
               <ShareOutlined />
             </IconButton>
           </FlexBetween>
-          {isComments && (
+          <Divider />
             <Box mt="0.5rem">
-              <Divider />
               <InputBase
                 placeholder={"Turn the tide, comment a waVe🌊..."}
                 multiline
                 sx={{
-                  mt: "10px",
-                  mb: "10px",
-                  height: "6vh",
+                  height: "100%",
                   width: "100%",
-                  backgroundColor: palette.neutral.light,
-                  borderRadius: "8px",
                   transition: "rows 0.2s",
                   overflowWrap: "break-word", // Enable text wrapping
                   wordWrap: "break-word", // Alternative property for older browsers
@@ -346,9 +332,7 @@ const PostDialog = ({
                 onChange={(e) => setNewComment(e.target.value)}
                 value={newComment}
               />
-              <Divider />
             </Box>
-          )}
         </Box>
       </Box>
     );
