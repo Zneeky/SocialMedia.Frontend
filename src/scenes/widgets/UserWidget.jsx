@@ -86,7 +86,7 @@ const UserWidget = ({ userId, isNotProfile = true }) => {
   const isEqual = userIn.UserId === userId;
 
   const handleEditProfile = () => {
-      setEditMode(true);
+    setEditMode(true);
   };
 
   const handleSaveProfile = () => {
@@ -254,7 +254,14 @@ const UserWidget = ({ userId, isNotProfile = true }) => {
         <Box p="1rem 0">
           <Box display="flex" gap="1rem">
             <FingerprintRounded fontSize="large" sx={{ color: main }} />
-            <Typography>{bio}</Typography>
+            <Typography
+              sx={{
+                overflowWrap: "break-word",
+                wordWrap: "break-word",
+              }}
+            >
+              {bio}
+            </Typography>
           </Box>
         </Box>
       </WidgetWrapper>

@@ -20,7 +20,7 @@ import FlexBetween from "components/FlexBetween";
 import WidgetWrapper from "components/WidgetWrapper";
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setPost } from "state";
+import { removePost } from "state";
 import Friend from "components/Frined";
 import UserImage from "components/UserImage";
 import axios from "axios";
@@ -141,6 +141,21 @@ const PostWidget = ({
     setIsComments(!isComments);
   };
 
+  //Delete post API call
+
+  const handleDeletePost=async ()=>{
+    await axios.delete(
+      `https://localhost:7172/api/posts?postId=${postId}`,
+      {
+          headers: {
+              Authorization: `Bearer ${token}`,
+          },
+      }
+  )
+  .then(() => dispatch(removePost(postId))) // Reload page after delete
+  .catch(error => console.error(`Error: ${error}`)); // Log any errors
+  }
+
   //Post liking API calls
   const handleLike = async () => {
     const body = {
@@ -199,7 +214,7 @@ const PostWidget = ({
         <Box sx={{ width: "400px", height: "300px" }}>
           <Button sx={{width:"100%", height:"40px" ,color:"red"}}> Report</Button>
           <Divider/>
-          <Button sx={{width:"100%", height:"40px", color:"red"}}> Delete</Button>
+          <Button onClick={handleDeletePost} sx={{width:"100%", height:"40px", color:"red"}}> Delete</Button>
           <Divider/>
         </Box>
       </Dialog>

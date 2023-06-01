@@ -160,6 +160,7 @@ const PostDialog = ({
           backgroundColor="rgb(0,0,0)"
         >
           <Box
+            maxHeight="inherit"
             width="667px"
             height="auto"//833px
             component="img"

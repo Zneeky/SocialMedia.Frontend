@@ -46,7 +46,7 @@ const HomePage = () => {
               <MyPostWidget userId={userId} picturePath={picturePath} />
               <PostsWidget userId={userId} />
             </Box>
-            <Box padding="2rem 0rem 0rem 0rem">
+            <Box padding="2rem 0rem 0rem 0rem" width="319px">
               <UserWidget userId={userId} />
             </Box>
           </Box>
@@ -67,7 +67,7 @@ const HomePage = () => {
               <MyPostWidget userId={userId} picturePath={picturePath} />
               <PostsWidget userId={userId} />
             </Box>
-            <Box padding="2rem 0rem 0rem 0rem">
+            <Box padding="2rem 0rem 0rem 0rem" width="319px">
               <UserWidget userId={userId} />
             </Box>
           </Box>
@@ -88,7 +88,7 @@ const HomePage = () => {
               <MyPostWidget userId={userId} picturePath={picturePath} />
               <PostsWidget userId={userId} />
             </Box>
-            <Box padding="2rem 0rem 0rem 0rem">
+            <Box padding="2rem 0rem 0rem 0rem" width="319px">
               <UserWidget userId={userId} />
             </Box>
           </Box>
