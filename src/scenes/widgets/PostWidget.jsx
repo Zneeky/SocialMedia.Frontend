@@ -1,9 +1,8 @@
 import {
-  ChatBubbleOutlineOutlined,
   FavoriteBorderOutlined,
   FavoriteOutlined,
-  FavoriteRounded,
   ShareOutlined,
+  MoreHoriz,
 } from "@mui/icons-material";
 import {
   Box,
@@ -13,6 +12,7 @@ import {
   useTheme,
   InputBase,
   Dialog,
+  Button,
   DialogContent,
   DialogTitle,
 } from "@mui/material";
@@ -40,6 +40,8 @@ const PostWidget = ({
   comments,
 }) => {
   const [open, setOpen] = useState(false);
+  const [more, setMore] = useState(false);
+  const [isMyPost, setMyPost] = useState(false);
   const [isComments, setIsComments] = useState(false);
   const [isLikedPost, setIsLikedPost] = useState(false);
   const [likeCount, setLikeCount] = useState(likes.$values.length);
@@ -63,12 +65,17 @@ const PostWidget = ({
     setIsLikedPost(likedStatus);
   };
 
+  const handleMore = () => {
+    setMore(true);
+  };
+
   const handleOpen = () => {
     setOpen(true);
   };
 
   const handleClose = () => {
     setOpen(false);
+    setMore(false);
   };
 
   const checkIsLiked = async () => {
@@ -98,6 +105,9 @@ const PostWidget = ({
   useEffect(() => {
     if (comments !== {}) {
       setCurrentComments(comments);
+    }
+    if (loggedInUserId === postUserId) {
+      setMyPost(true);
     }
     checkIsLiked();
   }, [comments, likes]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -168,15 +178,31 @@ const PostWidget = ({
 
   return (
     <WidgetWrapper m="2rem 0" sx={{ pl: 0, pr: 0 }}>
-      <Friend
-        friendId={postUserId}
-        name={username}
-        subtitle={location}
-        userPicturePath={userPicturePath}
-      />
+      <Box display="flex" flexDirection="row" justifyContent="space-between">
+        <Friend
+          friendId={postUserId}
+          name={username}
+          subtitle={location}
+          userPicturePath={userPicturePath}
+        />
+        <IconButton
+          sx={{ "&:hover": { backgroundColor: "transparent" } }}
+          onClick={handleMore}
+        >
+          <MoreHoriz />
+        </IconButton>
+      </Box>
       <Typography color={main} sx={{ mt: "1rem", pl: "1.5rem", pr: "1.5rem" }}>
         {description}
       </Typography>
+      <Dialog open={more} onClose={handleClose}>
+        <Box sx={{ width: "400px", height: "300px" }}>
+          <Button sx={{width:"100%", height:"40px" ,color:"red"}}> Report</Button>
+          <Divider/>
+          <Button sx={{width:"100%", height:"40px", color:"red"}}> Delete</Button>
+          <Divider/>
+        </Box>
+      </Dialog>
       <Dialog
         open={open}
         onClose={handleClose}
@@ -184,14 +210,13 @@ const PostWidget = ({
           "& .MuiPaper-root": {
             maxHight: "95%",
             maxWidth: "95%",
-            width: "fit-content",
-            height: "fit-content",
             m: "auto",
             borderRadius: "4px",
             background: "transparent",
             justifyContent: "center",
             boxSizing: "border-box",
             display: "flex",
+            overflow:"hidden",
           },
         }}
       >
