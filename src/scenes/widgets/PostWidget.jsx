@@ -38,12 +38,14 @@ const PostWidget = ({
   userPicturePath,
   likes,
   comments,
+  shares,
+  isLiked,
 }) => {
   const [open, setOpen] = useState(false);
   const [more, setMore] = useState(false);
   const [isMyPost, setMyPost] = useState(false);
   const [isComments, setIsComments] = useState(false);
-  const [isLikedPost, setIsLikedPost] = useState(false);
+  const [isLikedPost, setIsLikedPost] = useState(isLiked);
   const [likeCount, setLikeCount] = useState(likes.$values.length);
   const [newComment, setNewComment] = useState("");
   const [commentsCurrent, setCurrentComments] = useState({});
@@ -78,7 +80,7 @@ const PostWidget = ({
     setMore(false);
   };
 
-  const checkIsLiked = async () => {
+  /*const checkIsLiked = async () => {
     const body = {
       UserId: loggedInUserId,
       PostId: postId,
@@ -93,7 +95,7 @@ const PostWidget = ({
     );
     const response = await likeState.data;
     setIsLikedPost(response);
-  };
+  };*/
 
   const handleInputBaseKeyDown = (event) => {
     if (event.keyCode === 13 && newComment.trim() !== "") {
@@ -109,7 +111,6 @@ const PostWidget = ({
     if (loggedInUserId === postUserId) {
       setMyPost(true);
     }
-    checkIsLiked();
   }, [comments, likes]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleCommentSubmit = async (event) => {

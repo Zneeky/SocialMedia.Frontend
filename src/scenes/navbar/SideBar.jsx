@@ -44,6 +44,10 @@ import {
 import { faPaperPlane } from "@fortawesome/free-regular-svg-icons";
 import UserImage from "components/UserImage";
 import BigSearch from "components/BigSearch";
+import {
+  MicrosoftEdgeOutline,
+  MicrosoftEdgeOutlineWhite,
+} from "icons/MicrosoftEdgeOutline";
 
 const SideBar = ({ expandSize = 250 }) => {
   const [isMobileMenuToggled, setIsMobileMenuToggled] = useState(false);
@@ -161,15 +165,59 @@ const SideBar = ({ expandSize = 250 }) => {
       <List sx={{ marginTop: 1 }}>
         <ListItem
           sx={{
-            m: "0.5rem 0",
+            m: "2rem 0 4rem 0",
             display: "flex",
             justifyContent: "space-between",
             height: 60,
             width: expanded ? expandSize : 72,
-            left: -20,
+            left: -26,
             padding: "8px 16px",
           }}
-        ></ListItem>
+        >
+          {expanded ? (
+            <Box
+              display="flex"
+              width="100%"
+              sx={{
+                "&:hover": {
+                  cursor: "pointer",
+                },
+              }}
+            >
+              <Typography
+                fontWeight="bold"
+                fontSize="clamp(1rem, 2rem, 2.25rem)"
+                color="primary"
+                onClick={() => navigate("/home")}
+                sx={{
+                  ml:"10px",
+                  "&:hover": {
+                    color: primaryLight,
+                    cursor: "pointer",
+                  },
+                }}
+              >
+                waVe
+              </Typography>
+            </Box>
+          ) : (
+            <Tooltip
+              title="waVe"
+              placement="right"
+              TransitionComponent={Fade}
+              TransitionProps={{ timeout: 600 }}
+              arrow
+            >
+              <IconButton sx={{}}>
+                {theme.palette.mode === "dark" ? (
+                  <MicrosoftEdgeOutlineWhite />
+                ) : (
+                  <MicrosoftEdgeOutline />
+                )}
+              </IconButton>
+            </Tooltip>
+          )}
+        </ListItem>
         <ListItem
           sx={{
             display: "flex",

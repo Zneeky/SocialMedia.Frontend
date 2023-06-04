@@ -130,21 +130,35 @@ const Form = () => {
     }
 
     const login = async(values, onSubmitProps) =>{
-        const loggedInRsponse = await axios.post('https://localhost:7172/api/auth/login', values);
-
-        const loggedIn = await loggedInRsponse.data;
-        onSubmitProps.resetForm();
-        if(loggedIn.token!==null){
-            dispatch(
-                setLogin({
-                    user: loggedIn,
-                    profile: loggedIn,
-                    token: loggedIn.Token
-                })
-            );
-            navigate("/home")
-            console.log(loggedIn)
-        }
+        try {
+            const loggedInResponse = await axios.post('https://localhost:7172/api/auth/login', values);
+        
+            const loggedIn = await loggedInResponse.data;
+            onSubmitProps.resetForm();
+            if(loggedIn.token!==null){
+                dispatch(
+                    setLogin({
+                        user: loggedIn,
+                        profile: loggedIn,
+                        token: loggedIn.Token
+                    })
+                );
+                navigate("/home")
+                console.log(loggedIn)
+            }
+          } catch (error) {
+            setIsLoading(false);  // stop the circular motion
+            console.error(error);
+            if (error.response) {
+              if (error.response.status === 401) { // for wrong credentials
+                alert("Wrong credentials provided");
+              } else {
+                alert("Something went wrong. Please try again.");
+              }
+            } else {
+              alert("Server is not responding. Please try again later.");
+            }
+          }
     };
 
     const handleFormSubmit = async(values, onSubmitProps) =>{
