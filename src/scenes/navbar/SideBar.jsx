@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { keyframes } from "@emotion/react";
 import {
   Box,
   IconButton,
@@ -48,6 +49,27 @@ import {
   MicrosoftEdgeOutline,
   MicrosoftEdgeOutlineWhite,
 } from "icons/MicrosoftEdgeOutline";
+
+const waveMotion = keyframes`
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+`;
+
+const waveText = "waVe".split("").map((char, index) => (
+  <span
+    key={index}
+    sx={{
+      animation: `${waveMotion} 0.6s ease-in-out ${index * 0.1}s infinite`,
+      display: "inline-block",
+    }}
+  >
+    {char}
+  </span>
+));
 
 const SideBar = ({ expandSize = 250 }) => {
   const [isMobileMenuToggled, setIsMobileMenuToggled] = useState(false);
@@ -179,6 +201,7 @@ const SideBar = ({ expandSize = 250 }) => {
               display="flex"
               width="100%"
               sx={{
+                transition: "all 0.3s ease-in-out",
                 "&:hover": {
                   cursor: "pointer",
                 },
@@ -190,14 +213,14 @@ const SideBar = ({ expandSize = 250 }) => {
                 color="primary"
                 onClick={() => navigate("/home")}
                 sx={{
-                  ml:"10px",
+                  ml: "10px",
                   "&:hover": {
                     color: primaryLight,
                     cursor: "pointer",
                   },
                 }}
               >
-                waVe
+
               </Typography>
             </Box>
           ) : (
@@ -534,7 +557,12 @@ const SideBar = ({ expandSize = 250 }) => {
               TransitionProps={{ timeout: 600 }}
               arrow
             >
-              <IconButton>
+              <IconButton
+                onClick={() => {
+                  navigate(`/profile/${user.UserId}`);
+                  navigate(0);
+                }}
+              >
                 <UserImage image={user.ProfilePicture} size="30px" />
               </IconButton>
             </Tooltip>

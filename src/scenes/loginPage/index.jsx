@@ -1,9 +1,7 @@
 import { Box, Typography, useTheme, useMediaQuery } from "@mui/material";
 import React, { useState, useEffect, useRef } from "react";
 import Form from "./Form";
-import lottie from "lottie-web";
-import WaveLottie from "lotties/WaveLottie.json";
-import { LottieInteractivity, create } from '@lottiefiles/lottie-interactivity';
+
 
 const LoginPage = () => {
   const theme = useTheme();
