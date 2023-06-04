@@ -1,9 +1,9 @@
-import { Box, useMediaQuery, CircularProgress } from "@mui/material";
+import { Box, useMediaQuery, CircularProgress,useTheme, Divider } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import Navbar from "scenes/navbar";
-import MyPostWidget from "scenes/widgets/MyPostWidget";
+import SideBar from "scenes/navbar/SideBar";
 import PostsWidget from "scenes/widgets/PostsWidget";
 import UserWidget from "scenes/widgets/UserWidget";
 
@@ -11,8 +11,13 @@ const ProfilePage = () => {
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const { userId } = useParams();
+  const { palette } = useTheme();
   const token = useSelector((state) => state.token);
-  const isNonMobileScreens = useMediaQuery("(min-width:1000px)");
+  const isSM = useMediaQuery("(min-width:782px)");
+  const isMD = useMediaQuery("(min-width:1000px)");
+  const isL = useMediaQuery("(min-width:1200px)");
+  const isXL = useMediaQuery("(min-width:1500px)");
+  const isNonMobileScreens = useMediaQuery("(min-width:782px)");
 
   const getUser = async () => {
     const response = await fetch(`https://localhost:7172/api/users/${userId}`, {
@@ -37,8 +42,30 @@ const ProfilePage = () => {
 
   if (!user) return null;
 
-  if (isLoading) {
-    return (
+  if (isXL) {
+    return !isLoading ? (
+      <Box display="flex" backgroundColor={palette.background.alt}>
+          <SideBar expandSize={300} />
+          <Box
+            width="100%"
+            ml="300px"
+            padding="2rem 6%"
+            display="flex"
+            flexDirection="column"
+            gap="0.5rem"
+            justifyContent="center"
+            alignItems="center"
+          >
+            <Box width="100%">
+              <UserWidget userId={userId} isNotProfile={false} />
+            </Box>
+            {/*<Divider sx={{borderColor: palette.neutral.borderColor, mt:"2rem", width:"100%"}}/>*/}
+            <Box padding="2rem 2rem 0rem 0rem" width="472px">
+              <PostsWidget userId={userId} isProfile={true}/>
+            </Box>
+          </Box>
+      </Box>
+    ) : (
       <Box
         style={{
           display: "flex",
@@ -51,7 +78,7 @@ const ProfilePage = () => {
       </Box>
     );
   } else {
-    return (
+    return !isLoading ? (
       <Box>
         <Navbar />
         <Box
@@ -74,6 +101,17 @@ const ProfilePage = () => {
           </Box>
           {isNonMobileScreens && <Box width="15%"></Box>}
         </Box>
+      </Box>
+    ) : (
+      <Box
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <CircularProgress />
       </Box>
     );
   }

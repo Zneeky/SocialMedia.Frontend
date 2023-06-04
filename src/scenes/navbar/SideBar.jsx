@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
-import { keyframes } from "@emotion/react";
+import { styled, keyframes } from "@mui/system";
+import AnimatedText from "components/AnimatedText";
 import {
   Box,
   IconButton,
@@ -195,6 +196,7 @@ const SideBar = ({ expandSize = 250 }) => {
             left: -26,
             padding: "8px 16px",
           }}
+          onClick={() => navigate('/home')}
         >
           {expanded ? (
             <Box
@@ -207,21 +209,7 @@ const SideBar = ({ expandSize = 250 }) => {
                 },
               }}
             >
-              <Typography
-                fontWeight="bold"
-                fontSize="clamp(1rem, 2rem, 2.25rem)"
-                color="primary"
-                onClick={() => navigate("/home")}
-                sx={{
-                  ml: "10px",
-                  "&:hover": {
-                    color: primaryLight,
-                    cursor: "pointer",
-                  },
-                }}
-              >
-
-              </Typography>
+                <AnimatedText text="waVe" />
             </Box>
           ) : (
             <Tooltip
@@ -373,7 +361,7 @@ const SideBar = ({ expandSize = 250 }) => {
               display="block"
               textAlign="center"
               bgcolor={background}
-              zIndex={3}
+              zIndex={1}
               position="fixed" // Add position: "fixed" to ensure the box remains visible
               top={0} // Adjust top, left, right, and bottom values as needed
               left={73}

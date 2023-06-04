@@ -33,20 +33,21 @@ const Cover = styled("img")({
 
 const AvatarWrapper = styled("div")({
   position: "absolute",
-  top: 140,
+  top: 130,
   left: 8,
-  zIndex: 1,
+  zIndex: 0,
 });
 
 const Avatar = styled("img")({
-  width: 80,
-  height: 80,
+  width: 130,
+  height: 130,
   border: "2px solid white",
   borderRadius: "50%",
 });
 
 const Content = styled("div")(({ theme }) => ({
   padding: theme.spacing(2),
+  marginTop: "2.2rem",
 }));
 
 const Header = styled("div")(({ theme }) => ({
@@ -75,6 +76,8 @@ const UserWidget = ({ userId, isNotProfile = true }) => {
   const [editMode, setEditMode] = useState(false);
   const [followText, setFollowText] = useState("");
   const [followers, setFollowers] = useState(0);
+  const [showUserConnections, setShowUserConnections] = useState(false);
+  const [connections, setConnections ] = useState([]);
   const { palette } = useTheme();
   const navigate = useNavigate();
   const token = useSelector((state) => state.token);
@@ -92,6 +95,16 @@ const UserWidget = ({ userId, isNotProfile = true }) => {
   const handleSaveProfile = () => {
     // Save profile logic
     setEditMode(false);
+  };
+
+  const getUserConnections = async () => {
+    const response = await fetch(
+      `https://localhost:7172/api/users/followings/data?userId=${userIn.UserId}`,
+      {
+        method: "GET",
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
   };
 
   const getUser = async () => {

@@ -7,8 +7,6 @@ import PostsWidget from "scenes/widgets/PostsWidget";
 import { setProfile } from "state";
 import { useEffect } from "react";
 import SideBar from "scenes/navbar/SideBar";
-import { sizing } from "@mui/system";
-import { Translate } from "@mui/icons-material";
 
 const HomePage = () => {
   const dispatch = useDispatch();
