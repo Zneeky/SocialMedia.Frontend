@@ -8,6 +8,7 @@ import {
 } from "@mui/icons-material";
 import {
   Box,
+  Dialog,
   Typography,
   Divider,
   useTheme,
@@ -24,6 +25,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { styled } from "@mui/system";
 import EditDialog from "components/EditDialog";
+import UserConnections from "components/UserConnections";
 
 const Cover = styled("img")({
   width: "100%",
@@ -77,7 +79,7 @@ const UserWidget = ({ userId, isNotProfile = true }) => {
   const [followText, setFollowText] = useState("");
   const [followers, setFollowers] = useState(0);
   const [showUserConnections, setShowUserConnections] = useState(false);
-  const [connections, setConnections ] = useState([]);
+  const [connections, setConnections] = useState([]);
   const { palette } = useTheme();
   const navigate = useNavigate();
   const token = useSelector((state) => state.token);
@@ -99,12 +101,14 @@ const UserWidget = ({ userId, isNotProfile = true }) => {
 
   const getUserConnections = async () => {
     const response = await fetch(
-      `https://localhost:7172/api/users/followings/data?userId=${userIn.UserId}`,
+      `https://localhost:7172/api/users/followings/data?userId=${userId}`,
       {
         method: "GET",
         headers: { Authorization: `Bearer ${token}` },
       }
     );
+    const data = await response.json();
+    setConnections(data);
   };
 
   const getUser = async () => {
@@ -191,6 +195,7 @@ const UserWidget = ({ userId, isNotProfile = true }) => {
 
   useEffect(() => {
     getUser();
+    getUserConnections();
   }, []); // eslint-disable-line  react-hooks/exhaustive-deps
 
   if (!user) {
@@ -339,10 +344,58 @@ const UserWidget = ({ userId, isNotProfile = true }) => {
               />
             )}
           </Header>
-          <Box display="flex" alignItems="center" gap="1rem" mb="0.5rem">
-            <Typography color={medium}>{followers} Followers</Typography>
-            <Typography color={medium}>{followed} Following</Typography>
+          <Box
+            display="flex"
+            alignItems="center"
+            gap="1rem"
+            mb="0.5rem"
+            onClick={() => setShowUserConnections(true)}
+          >
+            <Typography
+              color={medium}
+              sx={{
+                "&:hover": {
+                  cursor: "pointer",
+                  textDecoration: "underline",
+                },
+              }}
+            >
+              {followers} Followers
+            </Typography>
+            <Typography
+              color={medium}
+              sx={{
+                "&:hover": {
+                  cursor: "pointer",
+                  textDecoration: "underline",
+                },
+              }}
+            >
+              {followed} Following
+            </Typography>
           </Box>
+          <Dialog open={showUserConnections} onClose={()=>setShowUserConnections(false)}
+                  sx={{
+                    "& .MuiPaper-root": {
+                      maxHight: "95%",
+                      maxWidth: "95%",
+                      m: "auto",
+                      borderRadius: "4px",
+                      background: "transparent",
+                      justifyContent: "center",
+                      boxSizing: "border-box",
+                      display: "flex",
+                      overflow:"hidden",
+                    },
+                  }}
+          >
+            {connections && connections.Followers && connections.Followed && (
+              <UserConnections
+                followers={connections.Followers.$values}
+                following={connections.Followed.$values}
+              />
+            )}
+          </Dialog>
           <Box display="flex" alignItems="center" gap="1rem" mb="0.5rem">
             <LocationOnOutlined fontSize="large" sx={{ color: main }} />
             <Typography color={medium}>{country}</Typography>

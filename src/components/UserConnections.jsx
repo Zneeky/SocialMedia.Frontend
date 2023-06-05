@@ -1,26 +1,110 @@
-import React from 'react';
-import { Box, List, ListItem, Typography, Grid } from '@mui/material';
+import React from "react";
+import {
+  Box,
+  List,
+  ListItem,
+  Divider,
+  Typography,
+  Grid,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
+import SearchedProfile from "scenes/widgets/SearchedProfile";
 
-export default function UserConnections({followers,following}) {
-  const followers = ['User 1', 'User 2', 'User 3'];
-  const following = ['User 4', 'User 5', 'User 6'];
+export default function UserConnections({ followers, following }) {
+  const isMobileScreen = useMediaQuery("(min-width:600px)");
+  const { palette } = useTheme();
 
   return (
-    <Box sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
-      <Grid container spacing={2}>
-        <Grid item xs={6}>
-          <Typography variant="h6">Followers</Typography>
-          <List>
-            {followers.map((follower, index) => (
-              <ListItem key={index}>{follower}</ListItem>
+    <Box
+      sx={{
+        width: "650px",
+        height: "50vh",
+        bgcolor: palette.background.default,
+        border: `1px solid ${palette.neutral.border}`,
+        overflow: "hidden",
+        borderRadius: "6px",
+      }}
+    >
+      <Grid container height="50vh">
+        <Grid
+          item
+          xs={6}
+          sx={{
+            borderRight: `1px solid ${palette.neutral.border}`,
+            height: "50vh",
+          }}
+        >
+          <Box sx={{ textAlign: "center" }}>
+            <Typography variant="h4" sx={{ m: "10px" }}>
+              Followers
+            </Typography>
+          </Box>
+          <Divider />
+          <List
+            sx={{
+              overflowY: "auto",
+              "&::-webkit-scrollbar": {
+                width: "0.4em",
+              },
+              "&::-webkit-scrollbar-track": {
+                borderRadius: "8px",
+                backgroundColor: "transparent",
+              },
+              "&::-webkit-scrollbar-thumb": {
+                backgroundColor: palette.primary.main,
+                borderRadius: "8px",
+                border: "none",
+                "&:hover": {
+                  backgroundColor: palette.primary.dark,
+                },
+              }, // For Internet Explorer and Edge
+            }}
+          >
+            {followers.map(({ $id, FollowerId, Name, ProfilePicture }) => (
+              <SearchedProfile
+                key={FollowerId}
+                SearchedUserId={FollowerId}
+                Name={Name}
+                ProfilePicture={ProfilePicture}
+              />
             ))}
           </List>
         </Grid>
         <Grid item xs={6}>
-          <Typography variant="h6">Following</Typography>
-          <List>
-            {following.map((followed, index) => (
-              <ListItem key={index}>{followed}</ListItem>
+          <Box sx={{ textAlign: "center" }}>
+            <Typography variant="h4" sx={{ m: "10px" }}>
+              Following
+            </Typography>
+          </Box>
+          <Divider />
+          <List
+            sx={{
+              overflowY: "auto",
+              "&::-webkit-scrollbar": {
+                width: "0.4em",
+              },
+              "&::-webkit-scrollbar-track": {
+                borderRadius: "8px",
+                backgroundColor: "transparent",
+              },
+              "&::-webkit-scrollbar-thumb": {
+                backgroundColor: palette.primary.main,
+                borderRadius: "8px",
+                border: "none",
+                "&:hover": {
+                  backgroundColor: palette.primary.dark,
+                },
+              }, // For Internet Explorer and Edge
+            }}
+          >
+            {following.map(({ $id, FollowedId, Name, ProfilePicture }) => (
+              <SearchedProfile
+                key={FollowedId}
+                SearchedUserId={FollowedId}
+                Name={Name}
+                ProfilePicture={ProfilePicture}
+              />
             ))}
           </List>
         </Grid>
