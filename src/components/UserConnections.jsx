@@ -18,7 +18,7 @@ export default function UserConnections({ followers, following }) {
   return (
     <Box
       sx={{
-        width: "650px",
+        width: "750px",
         height: "50vh",
         bgcolor: palette.background.default,
         border: `1px solid ${palette.neutral.border}`,
