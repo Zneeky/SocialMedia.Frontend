@@ -71,6 +71,8 @@ const HomePage = () => {
             </Box>
             <Box padding="2rem 0rem 0rem 0rem" width="319px">
               <UserWidget userId={userId} />
+              <Box mt="2rem"><AdvertWidget /></Box>
+              <Box mt="2rem"><SuggestionsWidget userId={userId}/></Box>
             </Box>
           </Box>
         </Box>
@@ -92,6 +94,8 @@ const HomePage = () => {
             </Box>
             <Box padding="2rem 0rem 0rem 0rem" width="319px">
               <UserWidget userId={userId} />
+              <Box mt="2rem"><AdvertWidget /></Box>
+              <Box mt="2rem"><SuggestionsWidget userId={userId}/></Box>
             </Box>
           </Box>
         </Box>

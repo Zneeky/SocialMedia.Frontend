@@ -188,8 +188,6 @@ const UserWidget = ({ userId, isNotProfile = true }) => {
         }
       );
 
-      const data = await axios.get()
-
       setFollowers(followers + 1);
       setFollowText("UNFOLLOW");
       getUserConnections();

@@ -43,6 +43,7 @@ const SuggestionsWidget = ({ userId }) => {
         suggestions.$values.length > 0 ? (
           suggestions.$values.map(({ $id, UserId, Name, ProfilePicture }) => (
             <Box
+              key={$id}
               sx={{
                 "&:hover": {
                   cursor: "pointer",

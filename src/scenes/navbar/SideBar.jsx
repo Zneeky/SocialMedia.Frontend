@@ -238,6 +238,7 @@ const SideBar = ({ expandSize = 250 }) => {
             left: -20,
             padding: "8px 16px",
           }}
+          onClick={() => navigate('/home')}
         >
           {expanded ? (
             <Box
@@ -508,6 +509,10 @@ const SideBar = ({ expandSize = 250 }) => {
             width: expanded ? expandSize : 72,
             left: -19,
             padding: "8px 16px",
+          }}
+          onClick={() => {
+            navigate(`/profile/${user.UserId}`);
+            navigate(0);
           }}
         >
           {expanded ? (
