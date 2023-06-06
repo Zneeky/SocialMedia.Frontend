@@ -67,13 +67,23 @@ const ProfilePage = () => {
             <UserWidget userId={userId} isNotProfile={false} />
           </Box>
           {/*<Divider sx={{borderColor: palette.neutral.borderColor, mt:"2rem", width:"100%"}}/>*/}
-          <Box width="100%" display="flex" flexDirection="row" justifyContent="center"
+          {/*<Box width="100%" display="flex" flexDirection="row" justifyContent="center"
           alignItems="center">
             <Box padding="2rem 2rem 0rem 0rem" width="472px">
               <PostsWidget userId={userId} isProfile={true} />
             </Box>
             <Box width="300px">
               <AdvertWidget />
+            </Box>
+    </Box>*/}
+          <Box ml="300px" width="100%" display="flex" p="0">
+            <Box margin="0 auto" display="flex" p="0">
+              <Box padding="2rem 2rem 0rem 0rem" width="472px">
+                <PostsWidget userId={userId} isProfile={true}/>
+              </Box>
+              <Box padding="4rem 0rem 0rem 0rem" width="319px">
+                <AdvertWidget />
+              </Box>
             </Box>
           </Box>
         </Box>

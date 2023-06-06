@@ -12,6 +12,8 @@ const SearchedProfile = ({
   ProfilePicture,
   Name,
   Searched = false,
+  pTB="8px",
+  pRL="24px"
 }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -122,7 +124,7 @@ const SearchedProfile = ({
   return (
     <Box
       sx={{
-        p: "8px 24px",
+        p: `${pTB} ${pRL}`,
         overflowY: "visible",
         background: "transparent",
         flexDirection: "column",

@@ -7,6 +7,8 @@ import PostsWidget from "scenes/widgets/PostsWidget";
 import { setProfile } from "state";
 import { useEffect } from "react";
 import SideBar from "scenes/navbar/SideBar";
+import AdvertWidget from "scenes/widgets/AdvertWidget";
+import SuggestionsWidget from "scenes/widgets/SuggestionsWidget";
 
 const HomePage = () => {
   const dispatch = useDispatch();
@@ -46,6 +48,8 @@ const HomePage = () => {
             </Box>
             <Box padding="2rem 0rem 0rem 0rem" width="319px">
               <UserWidget userId={userId} />
+              <Box mt="2rem"><AdvertWidget /></Box>
+              <Box mt="2rem"><SuggestionsWidget userId={userId}/></Box>
             </Box>
           </Box>
         </Box>
