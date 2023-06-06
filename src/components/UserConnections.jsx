@@ -62,12 +62,13 @@ export default function UserConnections({ followers, following }) {
             }}
           >
             {followers.map(({ $id, FollowerId, Name, ProfilePicture }) => (
-              <SearchedProfile
-                key={FollowerId}
-                SearchedUserId={FollowerId}
-                Name={Name}
-                ProfilePicture={ProfilePicture}
-              />
+                <SearchedProfile
+                  key={FollowerId}
+                  SearchedUserId={FollowerId}
+                  Name={Name}
+                  ProfilePicture={ProfilePicture}
+                  Searched={true}
+                />
             ))}
           </List>
         </Grid>
@@ -104,6 +105,7 @@ export default function UserConnections({ followers, following }) {
                 SearchedUserId={FollowedId}
                 Name={Name}
                 ProfilePicture={ProfilePicture}
+                Searched={true}
               />
             ))}
           </List>

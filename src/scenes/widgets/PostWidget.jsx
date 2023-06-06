@@ -388,7 +388,7 @@ const PostWidget = ({
                         <Typography
                           sx={{ fontSize: "0.75rem", color: "#8E8E8E" }}
                         >
-                          {`${comment.CreatedAt}d`}
+                          {`${comment.CreatedAt}`}
                         </Typography>
                         <Typography
                           sx={{ fontSize: "0.75rem", color: "#8E8E8E" }}

@@ -1,9 +1,16 @@
-import { Box, useMediaQuery, CircularProgress,useTheme, Divider } from "@mui/material";
+import {
+  Box,
+  useMediaQuery,
+  CircularProgress,
+  useTheme,
+  Divider,
+} from "@mui/material";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import Navbar from "scenes/navbar";
 import SideBar from "scenes/navbar/SideBar";
+import AdvertWidget from "scenes/widgets/AdvertWidget";
 import PostsWidget from "scenes/widgets/PostsWidget";
 import UserWidget from "scenes/widgets/UserWidget";
 
@@ -45,25 +52,31 @@ const ProfilePage = () => {
   if (isXL) {
     return !isLoading ? (
       <Box display="flex" backgroundColor={palette.background.alt}>
-          <SideBar expandSize={300} />
-          <Box
-            width="100%"
-            ml="300px"
-            padding="2rem 6%"
-            display="flex"
-            flexDirection="column"
-            gap="0.5rem"
-            justifyContent="center"
-            alignItems="center"
-          >
-            <Box width="100%">
-              <UserWidget userId={userId} isNotProfile={false} />
-            </Box>
-            {/*<Divider sx={{borderColor: palette.neutral.borderColor, mt:"2rem", width:"100%"}}/>*/}
+        <SideBar expandSize={300} />
+        <Box
+          width="100%"
+          ml="300px"
+          padding="2rem 6%"
+          display="flex"
+          flexDirection="column"
+          gap="0.5rem"
+          justifyContent="center"
+          alignItems="center"
+        >
+          <Box width="100%">
+            <UserWidget userId={userId} isNotProfile={false} />
+          </Box>
+          {/*<Divider sx={{borderColor: palette.neutral.borderColor, mt:"2rem", width:"100%"}}/>*/}
+          <Box width="100%" display="flex" flexDirection="row" justifyContent="center"
+          alignItems="center">
             <Box padding="2rem 2rem 0rem 0rem" width="472px">
-              <PostsWidget userId={userId} isProfile={true}/>
+              <PostsWidget userId={userId} isProfile={true} />
+            </Box>
+            <Box width="300px">
+              <AdvertWidget />
             </Box>
           </Box>
+        </Box>
       </Box>
     ) : (
       <Box

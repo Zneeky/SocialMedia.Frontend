@@ -19,13 +19,14 @@ import {
 import UserImage from "components/UserImage";
 import FlexBetween from "components/FlexBetween";
 import WidgetWrapper from "components/WidgetWrapper";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { styled } from "@mui/system";
 import EditDialog from "components/EditDialog";
 import UserConnections from "components/UserConnections";
+import { setFriends } from "state";
 
 const Cover = styled("img")({
   width: "100%",
@@ -82,6 +83,7 @@ const UserWidget = ({ userId, isNotProfile = true }) => {
   const [connections, setConnections] = useState([]);
   const { palette } = useTheme();
   const navigate = useNavigate();
+  const dispatch=useDispatch();
   const token = useSelector((state) => state.token);
   const profile = useSelector((state) => state.profile);
   const userIn = useSelector((state) => state.user);
@@ -109,6 +111,14 @@ const UserWidget = ({ userId, isNotProfile = true }) => {
     );
     const data = await response.json();
     setConnections(data);
+    if(userId===userIn.UserId){
+      const FollowedUsers = data.Followed;
+      dispatch(
+        setFriends({
+          FollowedUsers: FollowedUsers,
+        })
+      );
+    }
   };
 
   const getUser = async () => {
@@ -177,8 +187,12 @@ const UserWidget = ({ userId, isNotProfile = true }) => {
           },
         }
       );
+
+      const data = await axios.get()
+
       setFollowers(followers + 1);
       setFollowText("UNFOLLOW");
+      getUserConnections();
     } else {
       const unfollow = await axios.delete(
         `https://localhost:7172/api/users/followings?userId=${userIn.UserId}&followedId=${userId}`,
@@ -190,6 +204,7 @@ const UserWidget = ({ userId, isNotProfile = true }) => {
       );
       setFollowers(followers - 1);
       setFollowText("FOLLOW");
+      getUserConnections();
     }
   };
 
@@ -344,6 +359,14 @@ const UserWidget = ({ userId, isNotProfile = true }) => {
               />
             )}
           </Header>
+          <Typography
+              sx={{
+                overflowWrap: "break-word",
+                wordWrap: "break-word",
+              }}
+            >
+              {bio}
+            </Typography>
           <Box
             display="flex"
             alignItems="center"
