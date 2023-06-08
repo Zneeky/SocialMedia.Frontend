@@ -51,7 +51,7 @@ const ProfilePage = () => {
 
   if (isXL) {
     return !isLoading ? (
-      <Box display="flex" backgroundColor={palette.background.alt}>
+      <Box display="flex" backgroundColor={palette.background.alt} width="100%">
         <SideBar expandSize={300} />
         <Box
           width="100%"
@@ -66,23 +66,137 @@ const ProfilePage = () => {
           <Box width="100%">
             <UserWidget userId={userId} isNotProfile={false} />
           </Box>
-          {/*<Divider sx={{borderColor: palette.neutral.borderColor, mt:"2rem", width:"100%"}}/>*/}
-          {/*<Box width="100%" display="flex" flexDirection="row" justifyContent="center"
-          alignItems="center">
-            <Box padding="2rem 2rem 0rem 0rem" width="472px">
-              <PostsWidget userId={userId} isProfile={true} />
-            </Box>
-            <Box width="300px">
-              <AdvertWidget />
-            </Box>
-    </Box>*/}
           <Box ml="300px" width="100%" display="flex" p="0">
             <Box margin="0 auto" display="flex" p="0">
               <Box padding="2rem 2rem 0rem 0rem" width="472px">
-                <PostsWidget userId={userId} isProfile={true}/>
+                <PostsWidget userId={userId} isProfile={true} />
               </Box>
               <Box padding="4rem 0rem 0rem 0rem" width="319px">
                 <AdvertWidget />
+              </Box>
+            </Box>
+          </Box>
+        </Box>
+      </Box>
+    ) : (
+      <Box
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
+  } else if (isL) {
+    return !isLoading ? (
+      <Box display="flex" backgroundColor={palette.background.alt}>
+        <SideBar />
+        <Box
+          width="100%"
+          ml="250px"
+          padding="2rem 6%"
+          display="flex"
+          flexDirection="column"
+          gap="0.5rem"
+          justifyContent="center"
+          alignItems="center"
+        >
+          <Box width="100%">
+            <UserWidget userId={userId} isNotProfile={false} />
+          </Box>
+          <Box width="100%" display="flex" p="0">
+            <Box margin="0 auto" display="flex" p="0">
+              <Box padding="2rem 2rem 0rem 0rem" width="472px">
+                <PostsWidget userId={userId} isProfile={true} />
+              </Box>
+              <Box padding="2rem 0rem 0rem 0rem" width="319px">
+                <Box mt="2rem">
+                  <AdvertWidget />
+                </Box>
+              </Box>
+            </Box>
+          </Box>
+        </Box>
+      </Box>
+    ) : (
+      <Box
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
+  } else if (isMD) {
+    return !isLoading ? (
+      <Box display="flex" backgroundColor={palette.background.alt}>
+        <SideBar />
+        <Box
+          width="100%"
+          ml="72px"
+          padding="2rem 6%"
+          display="flex"
+          flexDirection="column"
+          gap="0.5rem"
+          justifyContent="center"
+          alignItems="center"
+        >
+          <Box width="100%">
+            <UserWidget userId={userId} isNotProfile={false} />
+          </Box>
+          <Box width="100%" display="flex" p="0">
+            <Box margin="0 auto" display="flex" p="0">
+              <Box padding="2rem 2rem 0rem 0rem" width="472px">
+                <PostsWidget userId={userId} isProfile={true} />
+              </Box>
+              <Box padding="2rem 0rem 0rem 0rem" width="319px">
+                <Box mt="2rem">
+                  <AdvertWidget />
+                </Box>
+              </Box>
+            </Box>
+          </Box>
+        </Box>
+      </Box>
+    ) : (
+      <Box
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    );
+  } else if (isSM) {
+    return !isLoading ? (
+      <Box display="flex" backgroundColor={palette.background.alt}>
+        <SideBar />
+        <Box
+          width="100%"
+          ml="72px"
+          padding="2rem 6%"
+          display="flex"
+          flexDirection="column"
+          gap="0.5rem"
+          justifyContent="center"
+          alignItems="center"
+        >
+          <Box width="100%">
+            <UserWidget userId={userId} isNotProfile={false} />
+          </Box>
+          <Box width="100%" display="flex" p="0">
+            <Box margin="0 auto" display="flex" p="0">
+              <Box padding="2rem 2rem 0rem 0rem" width="472px">
+                <PostsWidget userId={userId} isProfile={true} />
               </Box>
             </Box>
           </Box>
