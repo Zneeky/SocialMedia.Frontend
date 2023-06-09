@@ -47,7 +47,7 @@ const SuggestionsWidget = ({ userId }) => {
               sx={{
                 "&:hover": {
                   cursor: "pointer",
-                  borderRadius: "20px",
+                  borderRadius: "25px",
                   backgroundColor: palette.background.alt,
                 },
               }}

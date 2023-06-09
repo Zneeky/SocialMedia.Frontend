@@ -42,6 +42,7 @@ import {
   faCompass,
   faHouse,
   faMagnifyingGlass,
+  faArrowRightFromBracket
 } from "@fortawesome/free-solid-svg-icons";
 import { faPaperPlane } from "@fortawesome/free-regular-svg-icons";
 import UserImage from "components/UserImage";
@@ -50,6 +51,7 @@ import {
   MicrosoftEdgeOutline,
   MicrosoftEdgeOutlineWhite,
 } from "icons/MicrosoftEdgeOutline";
+
 
 const waveMotion = keyframes`
   0%, 100% {
@@ -561,6 +563,69 @@ const SideBar = ({ expandSize = 250 }) => {
             </Tooltip>
           )}
         </ListItem>
+
+        <ListItem
+          sx={{
+            display: "flex",
+            m:"25em 0rem 0rem 0rem",
+            justifyContent: "space-between",
+            height: 60,
+            width: expanded ? expandSize : 72,
+            left: -15,
+            padding: "8px 16px",
+          }}
+          onClick={() => navigate('/home')}
+        >
+          {expanded ? (
+            <Box
+              display="flex"
+              width="100%"
+              sx={{
+                "&:hover": {
+                  cursor: "pointer",
+                  borderRadius: "20px",
+                  backgroundColor: theme.palette.background.alt,
+                },
+              }}
+              onClick={() => dispatch(setLogout())}
+            >
+              <IconButton
+                sx={{ "&:hover": { backgroundColor: "transparent" } }}
+              >
+                <FontAwesomeIcon
+                  icon={faArrowRightFromBracket}
+                  size="xs"
+                  color={theme.palette.button.primary}
+                />
+              </IconButton>
+              <Typography
+                mt="0.4rem"
+                ml="0.5rem"
+                fontWeight={300}
+                fontSize="12px"
+                color={theme.palette.button.primary}
+              >
+                Log out
+              </Typography>
+            </Box>
+          ) : (
+            <Tooltip
+              title="Log out"
+              placement="right"
+              TransitionComponent={Fade}
+              TransitionProps={{ timeout: 600 }}
+              arrow
+            >
+              <IconButton onClick={() => dispatch(setLogout())}>
+                <FontAwesomeIcon
+                  icon={faArrowRightFromBracket}
+                  size="sm"
+                  color={theme.palette.button.primary}
+                />
+              </IconButton>
+            </Tooltip>
+          )}
+        </ListItem>  
       </List>
 
       <Box
@@ -571,18 +636,18 @@ const SideBar = ({ expandSize = 250 }) => {
           justifyContent: "space-between",
           height: 60,
           width: expanded ? expandSize : 72,
-          left: 0,
+          left: -3,
           padding: "8px 16px",
         }}
       >
         <IconButton
           onClick={() => dispatch(setMode())}
-          sx={{ fontSize: "25px" }}
+          sx={{ fontSize: "20px"}}
         >
           {theme.palette.mode === "dark" ? (
-            <DarkMode sx={{ fontSize: "25px" }} />
+            <DarkMode sx={{ fontSize: "20px" }} />
           ) : (
-            <LightMode sx={{ color: dark, fontSize: "25px" }} />
+            <LightMode sx={{ color: dark, fontSize: "20px" }} />
           )}
         </IconButton>
       </Box>

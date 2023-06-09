@@ -66,7 +66,7 @@ const ProfilePage = () => {
           <Box width="100%">
             <UserWidget userId={userId} isNotProfile={false} />
           </Box>
-          <Box ml="300px" width="100%" display="flex" p="0">
+          <Box  width="100%" display="flex" p="0">
             <Box margin="0 auto" display="flex" p="0">
               <Box padding="2rem 2rem 0rem 0rem" width="472px">
                 <PostsWidget userId={userId} isProfile={true} />

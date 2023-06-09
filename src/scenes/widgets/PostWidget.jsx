@@ -144,18 +144,16 @@ const PostWidget = ({
 
   //Delete post API call
 
-  const handleDeletePost=async ()=>{
-    await axios.delete(
-      `https://localhost:7172/api/posts?postId=${postId}`,
-      {
-          headers: {
-              Authorization: `Bearer ${token}`,
-          },
-      }
-  )
-  .then(() => dispatch(removePost(postId))) // Reload page after delete
-  .catch(error => console.error(`Error: ${error}`)); // Log any errors
-  }
+  const handleDeletePost = async () => {
+    await axios
+      .delete(`https://localhost:7172/api/posts?postId=${postId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then(() => dispatch(removePost(postId))) // Reload page after delete
+      .catch((error) => console.error(`Error: ${error}`)); // Log any errors
+  };
 
   //Post liking API calls
   const handleLike = async () => {
@@ -164,6 +162,10 @@ const PostWidget = ({
       PostId: postId,
     };
     if (isLikedPost) {
+      const newAmaount = likeCount - 1;
+      setLikeCount(newAmaount);
+      setIsLikedPost(false);
+
       const response = await axios.delete(
         `https://localhost:7172/api/posts/likes?userId=${body.UserId}&postId=${body.PostId}`,
         {
@@ -172,11 +174,11 @@ const PostWidget = ({
           },
         }
       );
-      const newAmaount = likeCount - 1;
-      setLikeCount(newAmaount);
-
-      setIsLikedPost(false);
     } else {
+      const newAmaount = likeCount + 1;
+      setLikeCount(newAmaount);
+      setIsLikedPost(true);
+
       const response = await axios.post(
         `https://localhost:7172/api/posts/likes?userId=${body.UserId}&postId=${body.PostId}`,
         null, // Pass null as the request body since it's a POST request
@@ -186,9 +188,6 @@ const PostWidget = ({
           },
         }
       );
-      const newAmaount = likeCount + 1;
-      setLikeCount(newAmaount);
-      setIsLikedPost(true);
     }
   };
 
@@ -213,10 +212,19 @@ const PostWidget = ({
       </Typography>
       <Dialog open={more} onClose={handleClose}>
         <Box sx={{ width: "400px", height: "300px" }}>
-          <Button sx={{width:"100%", height:"40px" ,color:"red"}}> Report</Button>
-          <Divider/>
-          <Button onClick={handleDeletePost} sx={{width:"100%", height:"40px", color:"red"}}> Delete</Button>
-          <Divider/>
+          <Button sx={{ width: "100%", height: "40px", color: "red" }}>
+            {" "}
+            Report
+          </Button>
+          <Divider />
+          <Button
+            onClick={handleDeletePost}
+            sx={{ width: "100%", height: "40px", color: "red" }}
+          >
+            {" "}
+            Delete
+          </Button>
+          <Divider />
         </Box>
       </Dialog>
       <Dialog
@@ -232,7 +240,7 @@ const PostWidget = ({
             justifyContent: "center",
             boxSizing: "border-box",
             display: "flex",
-            overflow:"hidden",
+            overflow: "hidden",
           },
         }}
       >
@@ -254,10 +262,13 @@ const PostWidget = ({
       </Dialog>
       {picturePath && (
         <img
-          width="100%"
-          height="auto"
+          style={{
+            maxHeight: "520px",
+            width: "100%",
+            height: "auto",
+            marginTop: "0.75rem",
+          }}
           alt="post"
-          style={{ marginTop: "0.75rem" }}
           src={`${picturePath}`}
           onDoubleClick={handleOpen}
         />

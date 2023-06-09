@@ -160,7 +160,7 @@ const PostDialog = ({
           backgroundColor="rgb(0,0,0)"
         >
           <Box
-            maxHeight="inherit"
+            maxHeight="833px"
             width="667px"
             height="auto"//833px
             component="img"
@@ -364,6 +364,7 @@ const PostDialog = ({
           backgroundColor="rgb(0,0,0)"
         >
           <Box
+            maxHeight="750px"
             width="600px"
             height="auto"//750px
             component="img"
@@ -568,6 +569,7 @@ const PostDialog = ({
         >
           <Box
             width="372px"
+            maxHeight="456px"
             height="auto"//465px
             component="img"
             src={`${picturePath}`}
@@ -770,6 +772,7 @@ const PostDialog = ({
         >
           <Box
             width="290px"
+            maxHeight="400px"
             height="auto"//400px
             component="img"
             src={`${picturePath}`}
